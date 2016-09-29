@@ -22,11 +22,11 @@ module.exports = (grunt)->
 				src: '<%= dirs.asset %>/UnprocessImages'
 				dest: '<%= dirs.public %>/Images'
 			fontAwesome:
-				src: '<%= dirs.bower %>/fontawesome'
+				src: '<%= dirs.bower %>/font-awesome'
 				dest: '<%= dirs.public %>/fonts'
 			theme:
 				base: '<%= dirs.bower %>/AdminLTE'
-				bootstrap: '<%= dirs.bower %>/bootstrap'
+				bootstrap: '<%= dirs.theme.base %>/bootstrap'
 				dist: '<%= dirs.theme.base %>/dist'
 				plugins: '<%= dirs.theme.base %>/plugins'
 			themeCDN:
@@ -85,6 +85,7 @@ module.exports = (grunt)->
 					'<%= dirs.theme.plugins %>/slimScroll/jquery.slimscroll.min.js'
 					'<%= dirs.theme.plugins %>/fastclick/fastclick.js'
 					'<%= dirs.theme.dist %>/js/app.min.js'
+					'<%= dirs.theme.dist %>/js/demo.js'
 					'<%= dirs.coffee.compiled %>/**/*.js'
 				]
 				dest: '<%= dirs.coffee.dest %>/<%= dirs.preferName %>.js'
