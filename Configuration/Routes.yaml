@@ -1,0 +1,11 @@
+#
+# Generate form
+#
+-
+  name: 'Generate nodetype'
+  uriPattern: ''
+  httpMethods: ['GET']
+  defaults:
+    '@controller': 'NodeGenerator'
+    '@action': 'generateForm'
+  appendExceedingArguments: TRUE

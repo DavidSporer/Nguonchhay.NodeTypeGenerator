@@ -1,0 +1,25 @@
+{
+    "name": "nguonchhay/nodetypegenerator",
+    "type": "neos-package",
+    "description": "Kickstart new nodetype in Neos",
+    "authors": [
+        {
+            "name": "Nguonchhay Touch",
+            "email": "tnguonchhay@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "typo3/neos": "~2.1"
+    },
+    "autoload": {
+        "psr-0": {
+            "Nguonchhay\\NodeTypeGenerator": "Classes/"
+        }
+    },
+    "extra": {
+        "neos": {
+            "package-key": "Nguonchhay.NodeTypeGenerator"
+        }
+    }
+}

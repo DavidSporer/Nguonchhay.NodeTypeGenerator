@@ -1,0 +1,37 @@
+{namespace ts=TYPO3\TypoScript\ViewHelpers}
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>Neos Node Generator | Dashboard</title>
+		<!-- Tell the browser to be responsive to screen width -->
+		<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+		<link rel="stylesheet" href="{f:uri.resource(path: 'Styles/nodeGenerator.min.css')}">
+
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+		<script src="{f:uri.resource(path: 'JavaScripts/html5shiv.min.js')}"></script>
+		<![endif]-->
+	</head>
+	<body class="hold-transition skin-blue sidebar-mini">
+		<div class="wrapper">
+			<f:render partial="Header" arguments="{_all}" />
+
+			<f:render partial="SideBar" arguments="{_all}" />
+
+			<div class="content-wrapper">
+				<f:render section="Content" />
+			</div>
+
+			<f:render partial="Footer" arguments="{_all}" />
+
+			<div class="control-sidebar-bg"></div>
+		</div>
+
+		<script src="{f:uri.resource(path: 'JavaScripts/nodeGenerator.js')}"></script>
+	</body>
+</html>

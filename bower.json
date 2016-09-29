@@ -1,0 +1,14 @@
+{
+  "name": "coffeescript-grunt",
+  "version": "0.0.0",
+  "authors": [
+    "Nguonchhay"
+  ],
+  "description": "Bower",
+  "main": "index.html",
+  "license": "Proprietary",
+  "private": true,
+  "dependencies": {
+    "AdminLTE": "admin-lte#^2.3.6"
+  }
+}

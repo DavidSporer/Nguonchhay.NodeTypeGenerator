@@ -1,0 +1,15 @@
+#                                                                        #
+# Security policy for the Nguonchhay.NodeTypeGenerator package           #
+#                                                                        #
+
+privilegeTargets:
+  TYPO3\Flow\Security\Authorization\Privilege\Method\MethodPrivilege:
+    'Nguonchhay.NodeTypeGenerator:NodeGeneratorControllerActions':
+      matcher: 'method(Nguonchhay\NodeTypeGenerator\Controller\NodeGeneratorController->(generateForm)Action())'
+
+roles:
+  'TYPO3.Flow:Everybody':
+    privileges:
+      -
+        privilegeTarget: 'Nguonchhay.NodeTypeGenerator:NodeGeneratorControllerActions'
+        permission: GRANT
