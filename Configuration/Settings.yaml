@@ -7,3 +7,16 @@ TYPO3:
             requestPatterns:
               controllerObjectName:
                 'TYPO3\Neos\Controller\.*|TYPO3\Neos\Service\.*|TYPO3\Media\Controller\.*|WebExcess\Notifications\Controller\NotificationController|Nguonchhay\NodeTypeGenerator\Controller\.*'
+
+
+
+Nguonchhay:
+  NodeTypeGenerator:
+    nodeType:
+      superTypes:
+        'TYPO3.Neos.NodeTypes:Page': 'Page'
+        'TYPO3.Neos.NodeTypes:TitleMixin': 'Title'
+        'TYPO3.Neos.NodeTypes:TextMixin': 'Text'
+        'TYPO3.Neos.NodeTypes:ImageMixin': 'Image'
+        'TYPO3.Neos.NodeTypes:LinkMixin': 'Link'
+        'TYPO3.Neos.NodeTypes:ContentReferences': 'Content references'

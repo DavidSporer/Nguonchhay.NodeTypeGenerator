@@ -21,18 +21,11 @@ module.exports = (grunt)->
 			image:
 				src: '<%= dirs.asset %>/UnprocessImages'
 				dest: '<%= dirs.public %>/Images'
-			fontAwesome:
-				src: '<%= dirs.bower %>/font-awesome'
-				dest: '<%= dirs.public %>/fonts'
-			theme:
-				base: '<%= dirs.bower %>/AdminLTE'
-				bootstrap: '<%= dirs.theme.base %>/bootstrap'
-				dist: '<%= dirs.theme.base %>/dist'
-				plugins: '<%= dirs.theme.base %>/plugins'
-			themeCDN:
-				base: '<%= dirs.asset %>/ThemeCDN'
-				js: '<%= dirs.themeCDN.base %>/JavaScripts'
-				css: '<%= dirs.themeCDN.base %>/Styles'
+			fontAwesome: '<%= dirs.bower %>/font-awesome'
+			bootstrap:
+				base: '<%= dirs.asset %>/Bootstrap'
+				js: '<%= dirs.bootstrap.base %>/JavaScripts'
+				css: '<%= dirs.bootstrap.base %>/Styles'
 
 		clean:
 			font:
@@ -48,8 +41,8 @@ module.exports = (grunt)->
 			fontAwesome:
 				expand: true
 				flatten: true
-				src: '<%= dirs.fontAwesome.src %>/fonts/*'
-				dest: '<%= dirs.fontAwesome.dest %>'
+				src: '<%= dirs.fontAwesome %>/fonts/*'
+				dest: '<%= dirs.public %>/fonts'
 
 		compass:
 			custom:
@@ -67,25 +60,11 @@ module.exports = (grunt)->
 				ext: '.js'
 
 		concat:
-			jsTheme:
+			js:
 				src: [
-					'<%= dirs.theme.plugins %>/jQuery/jquery-2.2.3.min.js',
-					'<%= dirs.themeCDN.js %>/jquery-ui.min.js'
-					'<%= dirs.theme.bootstrap %>/js/bootstrap.min.js'
-					'<%= dirs.themeCDN.js %>raphael-min.js'
-					'<%= dirs.theme.plugins %>/morris/morris.min.js'
-					'<%= dirs.theme.plugins %>/sparkline/jquery.sparkline.min.js'
-					'<%= dirs.theme.plugins %>/jvectormap/jquery-jvectormap-1.2.2.min.js'
-					'<%= dirs.theme.plugins %>/jvectormap/jquery-jvectormap-world-mill-en.js'
-					'<%= dirs.theme.plugins %>/knob/jquery.knob.js'
-					'<%= dirs.themeCDN.js %>/moment.min.js'
-					'<%= dirs.theme.plugins %>/daterangepicker/daterangepicker.js'
-					'<%= dirs.theme.plugins %>/datepicker/bootstrap-datepicker.js'
-					'<%= dirs.theme.plugins %>/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js'
-					'<%= dirs.theme.plugins %>/slimScroll/jquery.slimscroll.min.js'
-					'<%= dirs.theme.plugins %>/fastclick/fastclick.js'
-					'<%= dirs.theme.dist %>/js/app.min.js'
-					'<%= dirs.theme.dist %>/js/demo.js'
+					'<%= dirs.bootstrap.js %>/jquery.min.js',
+					'<%= dirs.bootstrap.js %>/tether.min.js'
+					'<%= dirs.bootstrap.js %>/bootstrap.min.js'
 					'<%= dirs.coffee.compiled %>/**/*.js'
 				]
 				dest: '<%= dirs.coffee.dest %>/<%= dirs.preferName %>.js'
@@ -94,26 +73,15 @@ module.exports = (grunt)->
 
 			html5shiv:
 				src: [
-					'<%= dirs.themeCDN.js %>/html5shiv.min.js'
-					'<%= dirs.themeCDN.js %>/respond.min.js'
+					'<%= dirs.bootstrap.js %>/ie10-viewport-bug-workaround.js'
 				]
 				dest: '<%= dirs.coffee.dest %>/html5shiv.js'
 				options:
 					separator: ';'
 
-			cssTheme:
+			css:
 				src: [
-					'<%= dirs.theme.bootstrap %>/css/bootstrap.min.css'
-					'<%= dirs.fontAwesome.src %>/css/font-awesome.min.css'
-					'<%= dirs.themeCDN.css %>/ionicons.min.css'
-					'<%= dirs.theme.dist %>/css/AdminLTE.min.css'
-					'<%= dirs.theme.dist %>/css/skins/_all-skins.min.css'
-					'<%= dirs.theme.plugins %>/iCheck/flat/blue.css'
-					'<%= dirs.theme.plugins %>/morris/morris.css'
-					'<%= dirs.theme.plugins %>/jvectormap/jquery-jvectormap-1.2.2.css'
-					'<%= dirs.theme.plugins %>/datepicker/datepicker3.css'
-					'<%= dirs.theme.plugins %>/daterangepicker/daterangepicker.css'
-					'<%= dirs.theme.plugins %>/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css'
+					'<%= dirs.bootstrap.css %>/bootstrap.min.css'
 					'<%= dirs.scss.complied %>/<%= dirs.preferName %>.css'
 				]
 				dest: '<%= dirs.scss.dest %>/<%= dirs.preferName %>.css'
@@ -172,7 +140,7 @@ module.exports = (grunt)->
 	grunt.loadNpmTasks 'grunt-contrib-watch'
 
 	grunt.registerTask 'default', ['build', 'watch']
-	grunt.registerTask 'script', ['clean:coffee', 'coffee', 'concat:jsTheme', 'concat:html5shiv', 'uglify']
-	grunt.registerTask 'style', ['clean:scss', 'compass', 'concat:cssTheme', 'cssmin']
+	grunt.registerTask 'script', ['clean:coffee', 'coffee', 'concat:js', 'concat:html5shiv', 'uglify']
+	grunt.registerTask 'style', ['clean:scss', 'compass', 'concat:css', 'cssmin']
 	grunt.registerTask 'image', ['clean:image', 'imagemin']
 	grunt.registerTask 'build', ['copy', 'script', 'style', 'image']

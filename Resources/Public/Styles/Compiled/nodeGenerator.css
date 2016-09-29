@@ -3536,35 +3536,11 @@ a {
 }
 
 /* line 5, ../../../Private/Assets/Styles/Components/_general.scss */
-.color-palette {
-  height: 35px;
-  line-height: 35px;
-  text-align: center;
+.starter-template {
+  margin-top: 80px;
 }
 
-/* line 11, ../../../Private/Assets/Styles/Components/_general.scss */
-.color-palette-set {
-  margin-bottom: 15px;
-}
-
-/* line 17, ../../../Private/Assets/Styles/Components/_general.scss */
-.color-palette:hover span {
-  display: block;
-}
-/* line 21, ../../../Private/Assets/Styles/Components/_general.scss */
-.color-palette span {
-  display: none;
-  font-size: 12px;
-}
-
-/* line 28, ../../../Private/Assets/Styles/Components/_general.scss */
-.color-palette-box h4 {
-  position: absolute;
-  top: 100%;
-  left: 25px;
-  margin-top: -40px;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 12px;
-  display: block;
-  z-index: 7;
+/* line 9, ../../../Private/Assets/Styles/Components/_general.scss */
+.select-super-type {
+  min-height: 150px;
 }

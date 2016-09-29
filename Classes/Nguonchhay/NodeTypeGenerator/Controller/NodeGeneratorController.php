@@ -15,7 +15,9 @@ class NodeGeneratorController extends AbstractController {
 	 * @return void
 	 */
 	public function generateFormAction() {
+		$superTypes = $this->settings['nodeType']['superTypes'];
 		$this->view->assign('siteKey', $this->getActiveSiteKey());
+		$this->view->assign('superTypes', $superTypes);
 	}
 
 	/**

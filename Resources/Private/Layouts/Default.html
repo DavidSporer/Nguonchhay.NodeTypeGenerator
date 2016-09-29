@@ -1,34 +1,27 @@
 {namespace ts=TYPO3\TypoScript\ViewHelpers}
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<title>Neos Node Generator | Dashboard</title>
-		<!-- Tell the browser to be responsive to screen width -->
-		<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<link rel="icon" href="{f:uri.resource(path: 'Images/favicon.ico')}">
 
-		<link rel="stylesheet" href="{f:uri.resource(path: 'Styles/nodeGenerator.min.css')}">
-
-		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-		<!--[if lt IE 9]>
-		<script src="{f:uri.resource(path: 'JavaScripts/html5shiv.min.js')}"></script>
-		<![endif]-->
+		<title>Neos - NodeType Generator</title>
+		<link href="{f:uri.resource(path: 'Styles/nodeGenerator.min.css')}" rel="stylesheet">
 	</head>
-	<body class="hold-transition skin-blue sidebar-mini">
-		<div class="wrapper">
+		<body class="hold-transition skin-blue sidebar-mini">
 			<f:render partial="Header" arguments="{_all}" />
-			<f:render partial="SideBar" arguments="{_all}" />
-
-			<div class="content-wrapper">
-				<f:render section="Content" />
+			<div class="container">
+				<div class="starter-template">
+					<f:render section="Content" />
+				</div>
 			</div>
 
-			<f:render partial="Footer" arguments="{_all}" />
-		</div>
-
-		<script src="{f:uri.resource(path: 'JavaScripts/nodeGenerator.js')}"></script>
+			<script src="{f:uri.resource(path: 'JavaScripts/nodeGenerator.js')}"></script>
+			<script src="{f:uri.resource(path: 'JavaScripts/html5shiv.min.js')}"></script>
 	</body>
 </html>
