@@ -16,8 +16,23 @@ class NodeGeneratorController extends AbstractController {
 	 */
 	public function generateFormAction() {
 		$superTypes = $this->settings['nodeType']['superTypes'];
+		$validators = $this->settings['nodeType']['validators'];
+		$propertyTypes = $this->settings['nodeType']['propertyTypes'];
+		$groups = $this->settings['nodeType']['groups'];
+
 		$this->view->assign('siteKey', $this->getActiveSiteKey());
 		$this->view->assign('superTypes', $superTypes);
+		$this->view->assign('validators', $validators);
+		$this->view->assign('propertyTypes', $propertyTypes);
+		$this->view->assign('groups', $groups);
+		$this->view->assign('fontAwesomeLink', $this->settings['fontAwesome']);
+	}
+
+	/**
+	 * @return void
+	 */
+	public function generatingAction() {
+
 	}
 
 	/**

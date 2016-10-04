@@ -2,10 +2,44 @@ a {
 	text-decoration: none;
 }
 
+.fullwidth-container {
+	padding: 0 50px;
+}
+
 .starter-template {
 	margin-top: 80px;
 }
 
-.select-super-type {
-	min-height: 150px;
+.generating-form {
+	margin-top: 40px;
+
+	#superTypes {
+		min-height: 200px;
+	}
+
+	#propertyValidator {
+		min-height: 150px;
+	}
+
+	.tab-content {
+		margin-top: 30px;
+	}
+
+	.control-label {
+		text-align: right;
+	}
+
+	.nav-tabs {
+		.nav-link {
+			color: #55595c;
+
+			&.active {
+				color: $color-primary;
+			}
+		}
+	}
+
+	.table-properties {
+		margin-top: 30px;
+	}
 }

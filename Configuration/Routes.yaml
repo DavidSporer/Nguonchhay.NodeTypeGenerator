@@ -9,3 +9,12 @@
     '@controller': 'NodeGenerator'
     '@action': 'generateForm'
   appendExceedingArguments: TRUE
+
+-
+  name: 'Generating nodetype'
+  uriPattern: 'generating'
+  httpMethods: ['POST']
+  defaults:
+    '@controller': 'NodeGenerator'
+    '@action': 'generating'
+  appendExceedingArguments: TRUE

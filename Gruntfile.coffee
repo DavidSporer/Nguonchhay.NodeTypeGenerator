@@ -81,6 +81,7 @@ module.exports = (grunt)->
 
 			css:
 				src: [
+					'<%= dirs.fontAwesome %>/css/font-awesome.min.css'
 					'<%= dirs.bootstrap.css %>/bootstrap.min.css'
 					'<%= dirs.scss.complied %>/<%= dirs.preferName %>.css'
 				]

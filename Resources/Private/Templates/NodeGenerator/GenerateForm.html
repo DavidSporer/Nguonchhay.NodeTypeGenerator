@@ -3,5 +3,178 @@
 <f:section name="Content">
 	<div class="col-md-12 text-md-center">
 		<h1>Create dynamic document and content NodeType</h1>
+
+		<f:form action="generating" controller="NodeGenerator" package="Nguonchhay.NodeTypeGenerator" enctype="multipart/form-data" class="form-horizontal generating-form">
+			<ul id="tabNodetype" class="nav nav-tabs" role="tablist">
+				<li class="nav-item">
+					<a class="nav-link active" data-toggle="tab" href="#info" role="tab"><i class="fa fa-cog" aria-hidden="true"></i> Information</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" data-toggle="tab" href="#property" role="tab"><i class="fa fa-cogs" aria-hidden="true"></i> Properties</a>
+				</li>
+			</ul>
+
+			<div class="tab-content">
+				<div class="tab-pane active" id="info" role="tabpanel">
+					<div class="row form-group">
+						<label class="col-md-2 control-label" for="sitePackage">Site package</label>
+						<div class="col-md-4">
+							<input required id="sitePackage" name="info[sitePackage]" type="text" value="{siteKey}" placeholder="Enter site package" class="form-control">
+						</div>
+
+						<label class="col-md-2 control-label" for="">Select NodeType</label>
+						<div class="col-md-4 text-md-left">
+							<label class="radio-inline" for="">
+								<input type="radio" name="info[isDocument]" value="1">
+								Document
+							</label>
+							<label class="radio-inline" for="">
+								<input type="radio" name="info[isDocument]" value="0" checked="checked">
+								Content
+							</label>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<label class="col-md-2 control-label" for="name">Name</label>
+						<div class="col-md-4">
+							<input required id="name" name="info[name]" type="text" placeholder="Enter name" class="form-control">
+						</div>
+
+						<label class="col-md-2 control-label" for="superTypes">Supertypes</label>
+						<div class="col-md-4">
+							<select id="superTypes" name="info[superTypes]" class="form-control" multiple="multiple">
+								<f:for each="{superTypes}" as="item" key="key">
+									<option value="{key}">{item}</option>
+								</f:for>
+							</select>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<label class="col-md-2 control-label" for="label">Label</label>
+						<div class="col-md-4">
+							<input required id="label" name="info[label]" type="text" placeholder="Enter label" class="form-control">
+						</div>
+
+						<label class="col-md-2 control-label" for="childNodes">Child nodes</label>
+						<div class="col-md-4">
+							<textarea class="form-control" id="childNodes" name="info[childNodes]" rows="3" placeholder="New line per child node"></textarea>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<label class="col-md-2 control-label" for="icon">Icon</label>
+						<div class="col-md-4 text-md-left">
+							<input id="icon" name="info[icon]" type="text" placeholder="Enter icon" class="form-control">
+							<a href="{fontAwesomeLink}" target="_blank">Find available fonts</a>
+						</div>
+
+						<label class="col-md-2 control-label" for="">Group</label>
+						<div class="col-md-4">
+							<select required name="info[group]" class="form-control">
+								<f:for each="{groups}" as="item" key="key">
+									<option value="{key}">{item}</option>
+								</f:for>
+							</select>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<label class="col-md-2 control-label" for="">Helper message</label>
+						<div class="col-md-4 text-md-left">
+							<div class="checkbox">
+								<label for="helper">
+									<input type="checkbox" name="info[helper]" id="helper" value="0">
+									Has helper message
+								</label>
+							</div>
+						</div>
+
+						<label class="col-md-2 control-label" for="">Create group at inspector</label>
+						<div class="col-md-4 text-md-left">
+							<div class="checkbox">
+								<label for="createGroupAtInspector">
+									<input type="checkbox" id="createGroupAtInspector" name="info[createGroupAtInspector]" value="0">
+									Is create
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="tab-pane" id="property" role="tabpanel">
+					<div class="row form-group">
+						<label class="col-md-2 control-label" for="propertyName">Name</label>
+						<div class="col-md-4">
+							<input id="propertyName" type="text" placeholder="Enter name" class="form-control">
+						</div>
+
+						<label class="col-md-2 control-label" for="propertyType">Type</label>
+						<div class="col-md-4">
+							<select id="propertyType" class="form-control">
+								<f:for each="{propertyTypes}" as="item" key="key">
+									<option value="{key}">{item}</option>
+								</f:for>
+							</select>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<label class="col-md-2 control-label" for="propertyLabel">Label</label>
+						<div class="col-md-4">
+							<input id="propertyLabel" type="text" placeholder="Enter label" class="form-control">
+						</div>
+
+						<label class="col-md-2 control-label" for="propertyDefaultValue">Default value</label>
+						<div class="col-md-4">
+							<input id="propertyDefaultValue" type="text" placeholder="Enter default value" class="form-control">
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<label class="col-md-2 control-label" for="">Select validator</label>
+						<div class="col-md-4">
+							<select id="propertyValidator" class="form-control" multiple="multiple">
+								<f:for each="{validators}" as="item" key="key">
+									<option value="{key}">{item}</option>
+								</f:for>
+							</select>
+						</div>
+
+						<label class="col-md-2 control-label" for="">Inline editable</label>
+						<div class="col-md-4 text-md-left">
+							<label class="checkbox-inline" for="">
+								<input type="checkbox" id="propertyIsInline" checked value="1">
+								Is inline editable
+							</label>
+							<input id="propertyIsInlinePlaceholder" type="text" placeholder="Enter inline editable placeholder" class="form-control">
+						</div>
+					</div>
+
+					<button type="button" id="newProperty" class="btn btn-default"><i class="fa fa-plus" aria-hidden="true"></i> Add property</button>
+					<div class="row">
+						<div class="col-md-12">
+							<table class="table table-bordered table-properties">
+								<thead>
+								<tr>
+									<th style="width: 50px;">#</th>
+									<th>Name</th>
+									<th>Label</th>
+									<th>Type</th>
+									<th>Validators</th>
+									<th style="width: 150px;">Action</th>
+								</tr>
+								</thead>
+								<tbody></tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<hr>
+			<button type="submit" name="generate" class="btn btn-primary"><i class="fa fa-angellist" aria-hidden="true"></i> Generate</button>
+			<button type="reset" class="btn btn-default reload-page"><i class="fa fa-refresh" aria-hidden="true"></i> Reset</button>
+		</f:form>
 	</div>
 </f:section>

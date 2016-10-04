@@ -7,16 +7,41 @@ TYPO3:
             requestPatterns:
               controllerObjectName:
                 'TYPO3\Neos\Controller\.*|TYPO3\Neos\Service\.*|TYPO3\Media\Controller\.*|WebExcess\Notifications\Controller\NotificationController|Nguonchhay\NodeTypeGenerator\Controller\.*'
-
+  Neos:
+    nodeTypes:
+      groups:
+        structureitem:
+          position: 200
+          label: 'Structure Item'
 
 
 Nguonchhay:
   NodeTypeGenerator:
     nodeType:
       superTypes:
-        'TYPO3.Neos.NodeTypes:Page': 'Page'
         'TYPO3.Neos.NodeTypes:TitleMixin': 'Title'
         'TYPO3.Neos.NodeTypes:TextMixin': 'Text'
         'TYPO3.Neos.NodeTypes:ImageMixin': 'Image'
         'TYPO3.Neos.NodeTypes:LinkMixin': 'Link'
         'TYPO3.Neos.NodeTypes:ContentReferences': 'Content references'
+        'TYPO3.Neos.NodeTypes:AssetList': 'Assets'
+      validators:
+        'not-empty': 'Not empty'
+        'datetime-validator': 'DateTime validator'
+        'float': 'FloatValidator'
+        'integer': 'IntegerValidator'
+        'number-range': 'NumberRangeValidator'
+      propertyTypes:
+        'boolean': 'Boolean'
+        'integer': 'Integer'
+        'string': 'String'
+        'TYPO3\Media\Domain\Model\ImageInterface': 'Image'
+        '\DateTime': 'Date time'
+        'reference': 'Reference'
+        'references': 'References'
+      groups:
+        'general': 'General'
+        'structure': 'Structure'
+        'structureitem': 'Structure item'
+
+    fontAwesome: 'http://fontawesome.io/icons'
