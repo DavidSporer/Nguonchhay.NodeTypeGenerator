@@ -70,7 +70,11 @@ ACTIVE:".active",ACTIVE_CHILD:"> .nav-item > .active, > .active",DATA_TOGGLE:'[d
     if ($(this).is(':checked')) {
       $('#propertyIsInlinePlaceholder').removeClass('hide');
       $('#propertyEditors').addClass('hide');
-      return $('#propertyEditorText').addClass('hide');
+      $('#propertyEditors').prop('selectedIndex', 0);
+      return $('.editor-container').find('.editor').each(function() {
+        $(this).addClass('hide');
+        return $(this).val('');
+      });
     } else {
       $('#propertyIsInlinePlaceholder').addClass('hide');
       $('#propertyEditorText').removeClass('hide');
@@ -97,10 +101,33 @@ ACTIVE:".active",ACTIVE_CHILD:"> .nav-item > .active, > .active",DATA_TOGGLE:'[d
   numberOfRows = 1;
 
   $('#newProperty').click(function() {
-    var defaultValue, editor, inlineEditable, inlineEditablePlaceholder, label, name, newTableRow, propertyType, selectOptions, tdAction, tdDefaultValue, tdLabel, tdName, tdPropertyType, tdValidators, textPlaceholder, textareaColumn, textareaRow, validators;
+    var dataRow, dataRowSumbit, defaultValue, editor, inlineEditable, inlineEditablePlaceholder, label, name, newTableRow, propertyType, selectOptions, tdAction, tdDefaultValue, tdLabel, tdName, tdPropertyType, tdValidators, textPlaceholder, textareaColumn, textareaRow, validators;
     name = $('#propertyName').val();
     label = $('#propertyLabel').val();
     if (name !== '' && label !== '') {
+      dataRow = {
+        'name': name,
+        'defaultValue': '',
+        'label': label,
+        'validators': '',
+        'type': {
+          'editorType': '',
+          'inlineEditable': {
+            'isInlineEditable': '',
+            'placeholder': ''
+          },
+          'editorText': {
+            'placeholder': ''
+          },
+          'editorTextArea': {
+            'rows': '',
+            'cols': ''
+          },
+          'editorSelect': {
+            'options': ''
+          }
+        }
+      };
       newTableRow = '<tr id="' + numberOfRows + '">';
       newTableRow += '<td>' + numberOfRows + '</td>';
       tdName = '<td>' + name + '</td>';
@@ -118,13 +145,20 @@ ACTIVE:".active",ACTIVE_CHILD:"> .nav-item > .active, > .active",DATA_TOGGLE:'[d
       if (propertyType === 'string') {
         propertyType += ':';
         if (inlineEditable.is(':checked')) {
+          dataRow.type.inlineEditable.isInlineEditable = true;
+          dataRow.type.inlineEditable.placeholder = inlineEditablePlaceholder;
           tdPropertyType += '<br>   - Inline editable: ' + inlineEditablePlaceholder;
         } else {
+          dataRow.type.editorType = editor;
           if (editor === 'default') {
+            dataRow.type.editorText.placeholder = textPlaceholder;
             tdPropertyType += '<br>   - Default text: ' + textPlaceholder;
           } else if (editor === 'TYPO3.Neos/Inspector/Editors/TextAreaEditor') {
+            dataRow.type.editorTextArea.rows = textareaRow;
+            dataRow.type.editorTextArea.cols = textareaColumn;
             tdPropertyType += '<br> Text area: rows = ' + textareaRow + ', and cols = ' + textareaColumn;
           } else if (editor === 'TYPO3.Neos/Inspector/Editors/SelectBoxEditor') {
+            dataRow.type.editorSelect.options = selectOptions;
             tdPropertyType += '<br>   - Select : options: ' + selectOptions;
           }
         }
@@ -132,14 +166,17 @@ ACTIVE:".active",ACTIVE_CHILD:"> .nav-item > .active, > .active",DATA_TOGGLE:'[d
       newTableRow += tdPropertyType + '</td>';
       newTableRow += tdLabel;
       validators = $('#propertyValidator').val();
+      dataRow.validators = validators;
       tdValidators = '<td>' + validators + '</td>';
       newTableRow += tdValidators;
       defaultValue = $('#propertyDefaultValue').val();
       tdDefaultValue = '<td>' + defaultValue + '</td>';
+      dataRow.defaultValue = defaultValue;
       newTableRow += tdDefaultValue;
+      dataRowSumbit = '<input type="hidden" name="properties[]" value="' + JSON.stringify(dataRow) + '">';
       tdAction = '<td>';
       tdAction += '&nbsp; <span data-action="delete" class="action action-delete" data-index="' + numberOfRows + '"><i class="fa fa-trash-o" aria-hidden="true"></i></span>';
-      tdAction += '</td>';
+      tdAction += dataRowSumbit + '</td>';
       newTableRow += tdAction + '</tr>';
       $('.table-properties tbody').append(newTableRow);
       return numberOfRows++;
