@@ -36,12 +36,17 @@ Nguonchhay:
         'integer': 'Integer'
         'string': 'String'
         'TYPO3\Media\Domain\Model\ImageInterface': 'Image'
-        '\DateTime': 'Date time'
+        'DateTime': 'Date time'
         'reference': 'Reference'
         'references': 'References'
       groups:
         'general': 'General'
         'structure': 'Structure'
         'structureitem': 'Structure item'
+      editors:
+        'default': 'Text'
+        'TYPO3.Neos/Inspector/Editors/TextAreaEditor': 'Text area'
+        'TYPO3.Neos/Inspector/Editors/SelectBoxEditor': 'Select'
+        'TYPO3.Neos/Inspector/Editors/LinkEditor': 'Link'
 
     fontAwesome: 'http://fontawesome.io/icons'

@@ -38,7 +38,7 @@
 					<div class="row form-group">
 						<label class="col-md-2 control-label" for="name">Name</label>
 						<div class="col-md-4">
-							<input required id="name" name="info[name]" type="text" placeholder="Enter name" class="form-control">
+							<input required id="name" name="info[name]" type="text" placeholder="Enter name" class="form-control only-character">
 						</div>
 
 						<label class="col-md-2 control-label" for="superTypes">Supertypes</label>
@@ -59,7 +59,7 @@
 
 						<label class="col-md-2 control-label" for="childNodes">Child nodes</label>
 						<div class="col-md-4">
-							<textarea class="form-control" id="childNodes" name="info[childNodes]" rows="3" placeholder="New line per child node"></textarea>
+							<textarea class="form-control" id="childNodes" name="info[childNodes]" rows="3" placeholder="name : constraint1,constraint2 # seperate by new line"></textarea>
 						</div>
 					</div>
 
@@ -88,6 +88,7 @@
 									<input type="checkbox" name="info[helper]" id="helper" value="0">
 									Has helper message
 								</label>
+								<input id="helperMessage" name="info[helperMessage]" type="text" placeholder="Enter helper message" class="form-control hide">
 							</div>
 						</div>
 
@@ -98,6 +99,7 @@
 									<input type="checkbox" id="createGroupAtInspector" name="info[createGroupAtInspector]" value="0">
 									Is create
 								</label>
+								<input id="groupName" name="info[groupName]" type="text" placeholder="Enter group name" class="form-control only-character hide">
 							</div>
 						</div>
 					</div>
@@ -106,7 +108,7 @@
 					<div class="row form-group">
 						<label class="col-md-2 control-label" for="propertyName">Name</label>
 						<div class="col-md-4">
-							<input id="propertyName" type="text" placeholder="Enter name" class="form-control">
+							<input id="propertyName" type="text" placeholder="Enter name" class="form-control only-character">
 						</div>
 
 						<label class="col-md-2 control-label" for="propertyType">Type</label>
@@ -125,9 +127,35 @@
 							<input id="propertyLabel" type="text" placeholder="Enter label" class="form-control">
 						</div>
 
-						<label class="col-md-2 control-label" for="propertyDefaultValue">Default value</label>
-						<div class="col-md-4">
-							<input id="propertyDefaultValue" type="text" placeholder="Enter default value" class="form-control">
+						<div class="inline-editable-container hide">
+							<label class="col-md-2 control-label" for="">Inline editable</label>
+							<div class="col-md-4 text-md-left">
+								<label class="checkbox-inline" for="">
+									<input type="checkbox" id="propertyIsInline" checked value="1">
+									Is inline editable
+								</label>
+								<input type="text" id="propertyIsInlinePlaceholder" placeholder="Enter inline editable placeholder" class="form-control">
+
+								<select id="propertyEditors" class="form-control hide">
+									<f:for each="{editors}" as="item" key="key">
+										<option value="{key}">{item}</option>
+									</f:for>
+								</select>
+								<br>
+
+								<div class="editor-container">
+									<!-- For editor text selection -->
+									<input type="text" id="propertyEditorText" placeholder="Enter placeholder" class="form-control editor hide">
+
+									<!-- For editor text area -->
+									<input type="text" maxlength="3" id="propertyEditorTextAreaRow" placeholder="Enter number of row" class="form-control only-number editor hide">
+									<br>
+									<input type="text" maxlength="3" id="propertyEditorTextAreaColumn" placeholder="Enter number of column" class="form-control only-number editor hide">
+
+									<!-- For editor select -->
+									<textarea class="form-control editor hide" id="propertyEditorSelect" rows="5" placeholder="key:value # separate by new line"></textarea>
+								</div>
+							</div>
 						</div>
 					</div>
 
@@ -141,17 +169,15 @@
 							</select>
 						</div>
 
-						<label class="col-md-2 control-label" for="">Inline editable</label>
-						<div class="col-md-4 text-md-left">
-							<label class="checkbox-inline" for="">
-								<input type="checkbox" id="propertyIsInline" checked value="1">
-								Is inline editable
-							</label>
-							<input id="propertyIsInlinePlaceholder" type="text" placeholder="Enter inline editable placeholder" class="form-control">
+						<label class="col-md-2 control-label" for="propertyDefaultValue">Default value</label>
+						<div class="col-md-4">
+							<input id="propertyDefaultValue" type="text" placeholder="Enter default value" class="form-control">
 						</div>
 					</div>
 
 					<button type="button" id="newProperty" class="btn btn-default"><i class="fa fa-plus" aria-hidden="true"></i> Add property</button>
+					<button type="button" id="clearProperty" class="btn btn-default"><img src="{f:uri.resource(path: 'Images/clear.png')}" class="icon"> Clear</button>
+
 					<div class="row">
 						<div class="col-md-12">
 							<table class="table table-bordered table-properties">
@@ -159,10 +185,11 @@
 								<tr>
 									<th style="width: 50px;">#</th>
 									<th>Name</th>
-									<th>Label</th>
 									<th>Type</th>
+									<th>Label</th>
 									<th>Validators</th>
-									<th style="width: 150px;">Action</th>
+									<th>Default value</th>
+									<th style="width: 100px;">Action</th>
 								</tr>
 								</thead>
 								<tbody></tbody>
