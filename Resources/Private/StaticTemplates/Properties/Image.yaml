@@ -1,0 +1,12 @@
+image:
+  type: TYPO3\Media\Domain\Model\ImageInterface
+  ui:
+    label: ''
+    reloadIfChanged: TRUE
+    inspector:
+      group: 'document'
+      position: 50
+      editorOptions:
+        features:
+          crop: TRUE
+          resize: TRUE

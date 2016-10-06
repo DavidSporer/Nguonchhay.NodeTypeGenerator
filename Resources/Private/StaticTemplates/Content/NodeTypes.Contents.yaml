@@ -1,0 +1,7 @@
+'content':
+  superTypes:
+    'TYPO3.Neos:Content': TRUE
+  ui:
+    label: ''
+    icon: ''
+    group: ''

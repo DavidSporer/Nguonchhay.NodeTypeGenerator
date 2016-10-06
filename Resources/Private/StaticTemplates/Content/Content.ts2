@@ -1,0 +1,4 @@
+prototype({content}) < prototype(TYPO3.Neos:Content) {
+	templatePath = 'resource://{contentPath}'
+	attributes.class = '{class}'
+}

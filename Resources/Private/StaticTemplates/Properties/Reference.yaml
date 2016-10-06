@@ -1,0 +1,14 @@
+reference:
+  type: reference
+  ui:
+    label: ''
+    inspector:
+      group: 'document'
+      position: 50
+references:
+  type: references
+  ui:
+    label: ''
+    inspector:
+      group: 'document'
+      position: 50

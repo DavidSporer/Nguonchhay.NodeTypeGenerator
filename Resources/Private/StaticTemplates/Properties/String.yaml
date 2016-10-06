@@ -1,0 +1,66 @@
+inlineEditable:
+  text:
+    type: string
+    defaultValue: ''
+    ui:
+      inlineEditable: TRUE
+      aloha:
+        placeholder: ''
+        autoparagraph: TRUE
+        'format':
+          'strong': TRUE
+          'em': TRUE
+          'u': FALSE
+          'sub': FALSE
+          'sup': FALSE
+          'del': FALSE
+          'p': TRUE
+          'h1': TRUE
+          'h2': TRUE
+          'h3': TRUE
+          'pre': TRUE
+          'removeFormat': TRUE
+        'table':
+          'table': TRUE
+        'list':
+          'ol': TRUE
+          'ul': TRUE
+        'link':
+          'a': TRUE
+notInlineEditable:
+  text:
+    type: string
+    ui:
+      label: ''
+      reloadIfChanged: TRUE
+      inspector:
+        group: 'document'
+        position: 50
+        editorOptions:
+          placeholder: ''
+textarea:
+  text:
+    type: string
+    ui:
+      label: ''
+      reloadIfChanged: TRUE
+      inspector:
+        group: ''
+        position: 50
+        editor: 'TYPO3.Neos/Inspector/Editors/TextAreaEditor'
+        editorOptions:
+          rows: ''
+          placeholder: ''
+select:
+  text:
+    type: string
+    ui:
+      label: ''
+      inspector:
+        group: ''
+        position: 50
+        editor: 'TYPO3.Neos/Inspector/Editors/SelectBoxEditor'
+        editorOptions:
+          values: ~
+
+

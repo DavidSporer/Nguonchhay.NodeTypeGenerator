@@ -1,0 +1,7 @@
+'document':
+  superTypes:
+    'TYPO3.Neos.NodeTypes:Page': TRUE
+  ui:
+    label: ''
+    icon: ''
+    group: ''

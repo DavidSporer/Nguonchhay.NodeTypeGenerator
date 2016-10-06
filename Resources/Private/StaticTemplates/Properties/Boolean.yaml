@@ -1,0 +1,7 @@
+boolean:
+  type: boolean
+  ui:
+    label: ''
+    inspector:
+      group: 'document'
+      position: 50

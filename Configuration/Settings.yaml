@@ -39,6 +39,7 @@ Nguonchhay:
         'DateTime': 'Date time'
         'reference': 'Reference'
         'references': 'References'
+        'asset': 'Asset'
       groups:
         'general': 'General'
         'structure': 'Structure'
@@ -50,3 +51,4 @@ Nguonchhay:
         'TYPO3.Neos/Inspector/Editors/LinkEditor': 'Link'
 
     fontAwesome: 'http://fontawesome.io/icons'
+    staticTemplatePath: 'resource://Nguonchhay.NodeTypeGenerator/Private/StaticTemplates'

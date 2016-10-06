@@ -1,0 +1,10 @@
+date:
+  type: DateTime
+  defaultValue: 'today midnight'
+  ui:
+    label: ''
+    inspector:
+      group: 'document'
+      position: 50
+      editorOptions:
+        format: 'd.m.Y'

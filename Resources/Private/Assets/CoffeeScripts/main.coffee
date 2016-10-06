@@ -102,7 +102,6 @@ $('#propertyEditors').change(->
 		$('#propertyEditorText').removeClass('hide')
 	else if $self.val() is 'TYPO3.Neos/Inspector/Editors/TextAreaEditor'
 		$('#propertyEditorTextAreaRow').removeClass('hide')
-		$('#propertyEditorTextAreaColumn').removeClass('hide')
 	else if $self.val() is 'TYPO3.Neos/Inspector/Editors/SelectBoxEditor'
 		$('#propertyEditorSelect').removeClass('hide')
 )
@@ -129,8 +128,7 @@ $('#newProperty').click(->
 					'placeholder': ''
 				},
 				'editorTextArea': {
-					'rows': '',
-					'cols': ''
+					'rows': ''
 				},
 				'editorSelect': {
 					'options': ''
@@ -153,7 +151,6 @@ $('#newProperty').click(->
 		editor = $('#propertyEditors').val()
 		textPlaceholder = $('#propertyEditorText').val()
 		textareaRow = $('#propertyEditorTextAreaRow').val()
-		textareaColumn = $('#propertyEditorTextAreaColumn').val()
 		selectOptions = $('#propertyEditorSelect').val()
 
 		if propertyType is 'string'
@@ -169,8 +166,7 @@ $('#newProperty').click(->
 					tdPropertyType += '<br>   - Default text: ' + textPlaceholder
 				else if editor is 'TYPO3.Neos/Inspector/Editors/TextAreaEditor'
 					dataRow.type.editorTextArea.rows = textareaRow
-					dataRow.type.editorTextArea.cols = textareaColumn
-					tdPropertyType += '<br> Text area: rows = ' + textareaRow + ', and cols = ' + textareaColumn
+					tdPropertyType += '<br> Text area: rows = ' + textareaRow
 				else if editor is 'TYPO3.Neos/Inspector/Editors/SelectBoxEditor'
 					dataRow.type.editorSelect.options = selectOptions
 					tdPropertyType += '<br>   - Select : options: ' + selectOptions

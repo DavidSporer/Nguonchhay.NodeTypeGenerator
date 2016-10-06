@@ -1,0 +1,6 @@
+{documentLayout} < page
+{documentLayout} {
+	body {
+		templatePath = 'resource://{documentPath}'
+	}
+}

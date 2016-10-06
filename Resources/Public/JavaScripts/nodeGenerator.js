@@ -91,8 +91,7 @@ ACTIVE:".active",ACTIVE_CHILD:"> .nav-item > .active, > .active",DATA_TOGGLE:'[d
     if ($self.val() === 'default') {
       return $('#propertyEditorText').removeClass('hide');
     } else if ($self.val() === 'TYPO3.Neos/Inspector/Editors/TextAreaEditor') {
-      $('#propertyEditorTextAreaRow').removeClass('hide');
-      return $('#propertyEditorTextAreaColumn').removeClass('hide');
+      return $('#propertyEditorTextAreaRow').removeClass('hide');
     } else if ($self.val() === 'TYPO3.Neos/Inspector/Editors/SelectBoxEditor') {
       return $('#propertyEditorSelect').removeClass('hide');
     }
@@ -101,7 +100,7 @@ ACTIVE:".active",ACTIVE_CHILD:"> .nav-item > .active, > .active",DATA_TOGGLE:'[d
   numberOfRows = 1;
 
   $('#newProperty').click(function() {
-    var dataRow, dataRowSumbit, defaultValue, editor, inlineEditable, inlineEditablePlaceholder, label, name, newTableRow, propertyType, selectOptions, tdAction, tdDefaultValue, tdLabel, tdName, tdPropertyType, tdValidators, textPlaceholder, textareaColumn, textareaRow, validators;
+    var dataRow, dataRowSumbit, defaultValue, editor, inlineEditable, inlineEditablePlaceholder, label, name, newTableRow, propertyType, selectOptions, tdAction, tdDefaultValue, tdLabel, tdName, tdPropertyType, tdValidators, textPlaceholder, textareaRow, validators;
     name = $('#propertyName').val();
     label = $('#propertyLabel').val();
     if (name !== '' && label !== '') {
@@ -120,8 +119,7 @@ ACTIVE:".active",ACTIVE_CHILD:"> .nav-item > .active, > .active",DATA_TOGGLE:'[d
             'placeholder': ''
           },
           'editorTextArea': {
-            'rows': '',
-            'cols': ''
+            'rows': ''
           },
           'editorSelect': {
             'options': ''
@@ -140,7 +138,6 @@ ACTIVE:".active",ACTIVE_CHILD:"> .nav-item > .active, > .active",DATA_TOGGLE:'[d
       editor = $('#propertyEditors').val();
       textPlaceholder = $('#propertyEditorText').val();
       textareaRow = $('#propertyEditorTextAreaRow').val();
-      textareaColumn = $('#propertyEditorTextAreaColumn').val();
       selectOptions = $('#propertyEditorSelect').val();
       if (propertyType === 'string') {
         propertyType += ':';
@@ -155,8 +152,7 @@ ACTIVE:".active",ACTIVE_CHILD:"> .nav-item > .active, > .active",DATA_TOGGLE:'[d
             tdPropertyType += '<br>   - Default text: ' + textPlaceholder;
           } else if (editor === 'TYPO3.Neos/Inspector/Editors/TextAreaEditor') {
             dataRow.type.editorTextArea.rows = textareaRow;
-            dataRow.type.editorTextArea.cols = textareaColumn;
-            tdPropertyType += '<br> Text area: rows = ' + textareaRow + ', and cols = ' + textareaColumn;
+            tdPropertyType += '<br> Text area: rows = ' + textareaRow;
           } else if (editor === 'TYPO3.Neos/Inspector/Editors/SelectBoxEditor') {
             dataRow.type.editorSelect.options = selectOptions;
             tdPropertyType += '<br>   - Select : options: ' + selectOptions;
