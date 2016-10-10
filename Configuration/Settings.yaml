@@ -26,11 +26,11 @@ Nguonchhay:
         'TYPO3.Neos.NodeTypes:ContentReferences': 'Content references'
         'TYPO3.Neos.NodeTypes:AssetList': 'Assets'
       validators:
-        'not-empty': 'Not empty'
-        'datetime-validator': 'DateTime validator'
+        'notEmpty': 'Not empty'
+        'datetime': 'DateTime validator'
         'float': 'FloatValidator'
         'integer': 'IntegerValidator'
-        'number-range': 'NumberRangeValidator'
+        'numberRange': 'NumberRangeValidator'
       propertyTypes:
         'boolean': 'Boolean'
         'integer': 'Integer'
@@ -39,7 +39,8 @@ Nguonchhay:
         'DateTime': 'Date time'
         'reference': 'Reference'
         'references': 'References'
-        'asset': 'Asset'
+        'TYPO3\Media\Domain\Model\Asset': 'Asset'
+        'array<TYPO3\Media\Domain\Model\Asset>': 'Asset list'
       groups:
         'general': 'General'
         'structure': 'Structure'

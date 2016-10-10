@@ -1,7 +1,0 @@
-asset:
-  type: 'TYPO3\Media\Domain\Model\Asset'
-  ui:
-    label: ''
-    inspector:
-      group: 'document'
-      position: 50

@@ -46,6 +46,7 @@ $('#helper').click(->
 		$('#helperMessage').removeClass('hide')
 	else
 		$('#helperMessage').addClass('hide')
+		$('#helperMessage').val('')
 )
 
 # Create new group checkbox
@@ -54,6 +55,7 @@ $('#createGroupAtInspector').click(->
 		$('#groupName').removeClass('hide')
 	else
 		$('#groupName').addClass('hide')
+		$('#groupName').val('')
 )
 
 
@@ -112,26 +114,28 @@ numberOfRows = 1
 $('#newProperty').click(->
 	name = $('#propertyName').val()
 	label = $('#propertyLabel').val()
-	if name isnt '' and label isnt ''
+	propertyType = $('#propertyType').val()
+	if name isnt '' and label isnt '' and propertyType isnt ''
 		dataRow = {
-			'name': name,
-			'defaultValue': '',
-			'label': label,
-			'validators': '',
-			'type' : {
-				'editorType': '',
-				'inlineEditable': {
-					'isInlineEditable': '',
-					'placeholder': ''
+			name: name,
+			defaultValue: '',
+			label: label,
+			validators: '',
+			propertyType: '',
+			type : {
+				editorType: '',
+				inlineEditable: {
+					isInlineEditable: '',
+					placeholder: ''
 				},
-				'editorText': {
-					'placeholder': ''
+				editorText: {
+					placeholder: ''
 				},
-				'editorTextArea': {
-					'rows': ''
+				editorTextArea: {
+					rows: ''
 				},
-				'editorSelect': {
-					'options': ''
+				editorSelect: {
+					options: ''
 				}
 			}
 		}
@@ -142,8 +146,8 @@ $('#newProperty').click(->
 		tdLabel = '<td>' + label + '</td>'
 		newTableRow += tdName
 
-		propertyType = $('#propertyType').val()
 		tdPropertyType = '<td>' + propertyType
+		dataRow.propertyType = propertyType
 
 		inlineEditable = $('#propertyIsInline')
 		inlineEditablePlaceholder = $('#propertyIsInlinePlaceholder').val()
@@ -185,8 +189,9 @@ $('#newProperty').click(->
 		dataRow.defaultValue = defaultValue
 		newTableRow += tdDefaultValue
 
-		# Combine properties to a json string
-		dataRowSumbit = '<input type="hidden" name="properties[]" value="' + JSON.stringify(dataRow) + '">'
+		# Combine properties to a json string. Replace " to ? in order to submit through html form
+		strDataRow = JSON.stringify(dataRow).replace(/\"/g, "?")
+		dataRowSumbit = '<input type="hidden" name="properties[]" value="' + strDataRow + '" >'
 
 		tdAction = '<td>'
 		tdAction += '&nbsp; <span data-action="delete" class="action action-delete" data-index="' + numberOfRows + '"><i class="fa fa-trash-o" aria-hidden="true"></i></span>'

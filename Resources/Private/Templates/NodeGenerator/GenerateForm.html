@@ -43,7 +43,7 @@
 
 						<label class="col-md-2 control-label" for="superTypes">Supertypes</label>
 						<div class="col-md-4">
-							<select id="superTypes" name="info[superTypes]" class="form-control" multiple="multiple">
+							<select id="superTypes" name="info[superTypes][]" class="form-control" multiple="multiple">
 								<f:for each="{superTypes}" as="item" key="key">
 									<option value="{key}">{item}</option>
 								</f:for>
@@ -59,7 +59,8 @@
 
 						<label class="col-md-2 control-label" for="childNodes">Child nodes</label>
 						<div class="col-md-4">
-							<textarea class="form-control" id="childNodes" name="info[childNodes]" rows="3" placeholder="name : constraint1,constraint2 # seperate by new line"></textarea>
+							<textarea class="form-control" id="childNodes" name="info[childNodes]" rows="3" placeholder="name => constraint1,constraint2 # seperate by new line"></textarea>
+							<f:render partial="ChildNodesGuide" />
 						</div>
 					</div>
 
@@ -85,7 +86,7 @@
 						<div class="col-md-4 text-md-left">
 							<div class="checkbox">
 								<label for="helper">
-									<input type="checkbox" name="info[helper]" id="helper" value="0">
+									<input type="checkbox" id="helper">
 									Has helper message
 								</label>
 								<input id="helperMessage" name="info[helperMessage]" type="text" placeholder="Enter helper message" class="form-control hide">
@@ -96,7 +97,7 @@
 						<div class="col-md-4 text-md-left">
 							<div class="checkbox">
 								<label for="createGroupAtInspector">
-									<input type="checkbox" id="createGroupAtInspector" name="info[createGroupAtInspector]" value="0">
+									<input type="checkbox" id="createGroupAtInspector">
 									Is create
 								</label>
 								<input id="groupName" name="info[groupName]" type="text" placeholder="Enter group name" class="form-control only-character hide">
@@ -198,7 +199,7 @@
 			</div>
 
 			<hr>
-			<button type="submit" name="generate" class="btn btn-primary"><i class="fa fa-angellist" aria-hidden="true"></i> Generate</button>
+			<button type="submit" class="btn btn-primary"><i class="fa fa-angellist" aria-hidden="true"></i> Generate</button>
 			<button type="reset" class="btn btn-default reload-page"><i class="fa fa-refresh" aria-hidden="true"></i> Reset</button>
 		</f:form>
 	</div>

@@ -34,53 +34,58 @@ a:hover {
 }
 
 /* line 21, ../../../Private/Assets/Styles/Components/_general.scss */
+.lamp-sign {
+  width: 50px;
+}
+
+/* line 25, ../../../Private/Assets/Styles/Components/_general.scss */
 .hide {
   display: none;
 }
 
-/* line 25, ../../../Private/Assets/Styles/Components/_general.scss */
+/* line 29, ../../../Private/Assets/Styles/Components/_general.scss */
 .fullwidth-container {
   padding: 0 50px;
 }
 
-/* line 29, ../../../Private/Assets/Styles/Components/_general.scss */
+/* line 33, ../../../Private/Assets/Styles/Components/_general.scss */
 .starter-template {
   margin-top: 80px;
 }
 
-/* line 33, ../../../Private/Assets/Styles/Components/_general.scss */
+/* line 37, ../../../Private/Assets/Styles/Components/_general.scss */
 .generating-form {
   margin-top: 40px;
 }
-/* line 36, ../../../Private/Assets/Styles/Components/_general.scss */
+/* line 40, ../../../Private/Assets/Styles/Components/_general.scss */
 .generating-form #superTypes {
   min-height: 200px;
 }
-/* line 40, ../../../Private/Assets/Styles/Components/_general.scss */
+/* line 44, ../../../Private/Assets/Styles/Components/_general.scss */
 .generating-form #propertyValidator {
   min-height: 150px;
 }
-/* line 44, ../../../Private/Assets/Styles/Components/_general.scss */
+/* line 48, ../../../Private/Assets/Styles/Components/_general.scss */
 .generating-form .tab-content {
   margin-top: 30px;
 }
-/* line 48, ../../../Private/Assets/Styles/Components/_general.scss */
+/* line 52, ../../../Private/Assets/Styles/Components/_general.scss */
 .generating-form .control-label {
   text-align: right;
 }
-/* line 53, ../../../Private/Assets/Styles/Components/_general.scss */
+/* line 57, ../../../Private/Assets/Styles/Components/_general.scss */
 .generating-form .nav-tabs .nav-link {
   color: #55595c;
 }
-/* line 56, ../../../Private/Assets/Styles/Components/_general.scss */
+/* line 60, ../../../Private/Assets/Styles/Components/_general.scss */
 .generating-form .nav-tabs .nav-link.active {
   color: #3c8dbc;
 }
-/* line 62, ../../../Private/Assets/Styles/Components/_general.scss */
+/* line 66, ../../../Private/Assets/Styles/Components/_general.scss */
 .generating-form .table-properties {
   margin-top: 30px;
 }
-/* line 65, ../../../Private/Assets/Styles/Components/_general.scss */
+/* line 69, ../../../Private/Assets/Styles/Components/_general.scss */
 .generating-form .table-properties td {
   text-align: left;
 }

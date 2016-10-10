@@ -34,7 +34,8 @@
     if ($(this).is(':checked')) {
       return $('#helperMessage').removeClass('hide');
     } else {
-      return $('#helperMessage').addClass('hide');
+      $('#helperMessage').addClass('hide');
+      return $('#helperMessage').val('');
     }
   });
 
@@ -42,7 +43,8 @@
     if ($(this).is(':checked')) {
       return $('#groupName').removeClass('hide');
     } else {
-      return $('#groupName').addClass('hide');
+      $('#groupName').addClass('hide');
+      return $('#groupName').val('');
     }
   });
 
@@ -90,29 +92,31 @@
   numberOfRows = 1;
 
   $('#newProperty').click(function() {
-    var dataRow, dataRowSumbit, defaultValue, editor, inlineEditable, inlineEditablePlaceholder, label, name, newTableRow, propertyType, selectOptions, tdAction, tdDefaultValue, tdLabel, tdName, tdPropertyType, tdValidators, textPlaceholder, textareaRow, validators;
+    var dataRow, dataRowSumbit, defaultValue, editor, inlineEditable, inlineEditablePlaceholder, label, name, newTableRow, propertyType, selectOptions, strDataRow, tdAction, tdDefaultValue, tdLabel, tdName, tdPropertyType, tdValidators, textPlaceholder, textareaRow, validators;
     name = $('#propertyName').val();
     label = $('#propertyLabel').val();
-    if (name !== '' && label !== '') {
+    propertyType = $('#propertyType').val();
+    if (name !== '' && label !== '' && propertyType !== '') {
       dataRow = {
-        'name': name,
-        'defaultValue': '',
-        'label': label,
-        'validators': '',
-        'type': {
-          'editorType': '',
-          'inlineEditable': {
-            'isInlineEditable': '',
-            'placeholder': ''
+        name: name,
+        defaultValue: '',
+        label: label,
+        validators: '',
+        propertyType: '',
+        type: {
+          editorType: '',
+          inlineEditable: {
+            isInlineEditable: '',
+            placeholder: ''
           },
-          'editorText': {
-            'placeholder': ''
+          editorText: {
+            placeholder: ''
           },
-          'editorTextArea': {
-            'rows': ''
+          editorTextArea: {
+            rows: ''
           },
-          'editorSelect': {
-            'options': ''
+          editorSelect: {
+            options: ''
           }
         }
       };
@@ -121,8 +125,8 @@
       tdName = '<td>' + name + '</td>';
       tdLabel = '<td>' + label + '</td>';
       newTableRow += tdName;
-      propertyType = $('#propertyType').val();
       tdPropertyType = '<td>' + propertyType;
+      dataRow.propertyType = propertyType;
       inlineEditable = $('#propertyIsInline');
       inlineEditablePlaceholder = $('#propertyIsInlinePlaceholder').val();
       editor = $('#propertyEditors').val();
@@ -159,7 +163,8 @@
       tdDefaultValue = '<td>' + defaultValue + '</td>';
       dataRow.defaultValue = defaultValue;
       newTableRow += tdDefaultValue;
-      dataRowSumbit = '<input type="hidden" name="properties[]" value="' + JSON.stringify(dataRow) + '">';
+      strDataRow = JSON.stringify(dataRow).replace(/\"/g, "?");
+      dataRowSumbit = '<input type="hidden" name="properties[]" value="' + strDataRow + '" >';
       tdAction = '<td>';
       tdAction += '&nbsp; <span data-action="delete" class="action action-delete" data-index="' + numberOfRows + '"><i class="fa fa-trash-o" aria-hidden="true"></i></span>';
       tdAction += dataRowSumbit + '</td>';

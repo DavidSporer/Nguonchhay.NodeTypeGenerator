@@ -1,7 +1,0 @@
-integer:
-  type: integer
-  ui:
-    label: ''
-    inspector:
-      group: 'document'
-      position: 50

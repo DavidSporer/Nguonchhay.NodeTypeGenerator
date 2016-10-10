@@ -5,9 +5,16 @@ namespace Nguonchhay\NodeTypeGenerator\Controller;
  * This file is part of the Nguonchhay.NodeTyoeGenerator package.          *
  **************************************************************************/
 
+use Nguonchhay\NodeTypeGenerator\Domain\Model\DocumentNodeType;
 use TYPO3\Flow\Annotations as Flow;
 
 class NodeGeneratorController extends AbstractController {
+
+	/**
+	 * @Flow\Inject
+	 * @var DocumentNodeType
+	 */
+	protected $documentNodeType;
 
 
 
@@ -34,7 +41,19 @@ class NodeGeneratorController extends AbstractController {
 	 * @return void
 	 */
 	public function generatingAction() {
+		$arguments = $this->request->getArguments();
+		$isDocument = intval($arguments['info']['isDocument']);
+		if ($isDocument) {
+			$this->documentNodeType->generateDocumentNodeType($arguments);
+		} else {
 
+		}
+		die();
+		$this->redirect('confirm', null, null, ['isDocument' => $isDocument]);
+	}
+
+	public function confirm($isDocument) {
+		die();
 	}
 
 	/**

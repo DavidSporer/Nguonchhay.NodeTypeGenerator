@@ -1,6 +1,7 @@
-{documentLayout} < page
-{documentLayout} {
+###documentLayout### < page
+###documentLayout### {
 	body {
-		templatePath = 'resource://{documentPath}'
+		templatePath = 'resource://###siteKey###/Private/Templates/Page/###documentFilename###'
+		###content###
 	}
 }
