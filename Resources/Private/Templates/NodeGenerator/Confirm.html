@@ -1,0 +1,53 @@
+<f:layout name="Default" />
+
+<f:section name="Content">
+	<div class="col-md-12 text-md-center">
+		<h1>Preview Generated {f:if(condition: isDocument, then: 'Document', else: 'Content')} NodeType</h1>
+
+		<f:form action="setupNodeType" controller="NodeGenerator" package="Nguonchhay.NodeTypeGenerator" enctype="multipart/form-data" class="form-horizontal generating-form">
+			<input type="hidden" name="isDocument" value="{isDocument}" >
+			<button type="submit" class="btn btn-primary"><i class="fa fa-angellist" aria-hidden="true"></i> Set up to your sites</button>
+
+			<ul id="tabNodetype" class="nav nav-tabs" role="tablist">
+				<li class="nav-item">
+					<a class="nav-link active" data-toggle="tab" href="#{nodetype.config.id}" role="tab"><i class="fa fa-eye" aria-hidden="true"></i> {nodetype.config.filename}</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" data-toggle="tab" href="#{nodetype.fusion.id}" role="tab"><i class="fa fa-pencil" aria-hidden="true"></i> {nodetype.fusion.filename}</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" data-toggle="tab" href="#{nodetype.template.id}" role="tab"><i class="fa fa-pencil" aria-hidden="true"></i> {nodetype.template.filename}</a>
+				</li>
+			</ul>
+
+			<div class="tab-content">
+				<div class="tab-pane active" id="{nodetype.config.id}" role="tabpanel">
+					<div class="row form-group">
+						<div class="col-md-12">
+							<textarea class="form-control nodetype-preview-textarea" readonly>{nodetype.config.content}</textarea>
+						</div>
+					</div>
+				</div>
+
+				<div class="tab-pane" id="{nodetype.fusion.id}" role="tabpanel">
+					<div class="row form-group">
+						<div class="col-md-12">
+							<textarea name="fusion" class="form-control nodetype-preview-textarea">{nodetype.fusion.content}</textarea>
+						</div>
+					</div>
+				</div>
+
+				<div class="tab-pane" id="{nodetype.template.id}" role="tabpanel">
+					<div class="row form-group">
+						<div class="col-md-12">
+							<textarea name="template" class="form-control nodetype-preview-textarea">{nodetype.template.content}</textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<hr>
+			<button type="submit" class="btn btn-primary"><i class="fa fa-angellist" aria-hidden="true"></i> Set up to your sites</button>
+		</f:form>
+	</div>
+</f:section>

@@ -35,17 +35,30 @@ class PropertyTemplateService {
 	}
 
 	/**
+	 * @param $validators
+	 *
+	 * @return array
+	 */
+	public function getValidatorProperty($validators) {
+		$propertyValidators['validation'] = [];
+		foreach ($validators as $validator) {
+			$propertyValidators['validation'][$validator] = [];
+		}
+		return $propertyValidators;
+	}
+
+	/**
 	 * @param array $data
 	 *
 	 * @return array
 	 */
 	public function generateDateTimeProperty($data) {
 		return [
-			trim($data['name']) => [
+			lcfirst(trim($data['name'])) => [
 				'type' => 'DateTime',
-				'defaultValue' => trim($data['defaultValue']),
+				'defaultValue' => $data['defaultValue'],
 				'ui' => [
-					'label' => trim($data['label']),
+					'label' => $data['label'],
 					'reloadIfChanged' => true,
 					'inspector' => [
 						'group' => isset($data['documentGroup']) ? trim($data['documentGroup']) : 'document',
@@ -59,8 +72,204 @@ class PropertyTemplateService {
 		];
 	}
 
-	public function generateStringProperty($data) {
+	/**
+	 * @param $data
+	 *
+	 * @return array
+	 */
+	public function generateInlineEditableProperty($data) {
+		return [
+			lcfirst(trim($data['name'])) => [
+				'type' => 'string',
+				'defaultValue'=> $data['defaultValue'],
+				'ui' => [
+					'inlineEditable' => true,
+					'aloha' => [
+						'placeholder' => $data['placeholder'],
+						'autoparagraph' => true,
+						'format' => [
+							'strong' => true,
+							'em' => true,
+							'u' => false,
+							'sub' => false,
+							'sup' => false,
+							'del' => false,
+							'p' => false,
+							'h1' => true,
+							'h2' => true,
+							'h3' => true,
+							'pre' => true,
+							'removeFormat' => true
+						],
+						'table' => [
+							'table' => true
+						],
+						'list' => [
+							'ol' => true,
+							'ul' => true,
+							'link' => true,
+							'a' => true
+						]
+					]
+				]
+			]
+		];
+	}
 
+	/**
+	 * @param $data
+	 *
+	 * @return array
+	 */
+	public function generateSingleTextProperty($data) {
+		$name = lcfirst(trim($data['name']));
+		$singleTextProperty[$name] = [
+			'type' => 'string',
+			'ui' => [
+				'label' => $data['label'],
+				'reloadIfChanged' => true,
+				'inspector' => [
+					'group' => $data['group'],
+					'editorOptions' => [
+						'maxlength' => 255
+					]
+				]
+			]
+		];
+		$validation = $this->getValidatorProperty($data['validators']);
+		if (count($validation)) {
+			$singleTextProperty[$name][key($validation)] = $validation[key($validation)];
+		}
+
+		return $singleTextProperty;
+	}
+
+	/**
+	 * @param $data
+	 *
+	 * @return array
+	 */
+	public function generateTextAreaProperty($data) {
+		$name = lcfirst(trim($data['name']));
+		$textAreaProperty[$name] = [
+			'type' => 'string',
+			'ui' => [
+				'label' => $data['label'],
+				'reloadIfChanged' => true,
+				'inspector' => [
+					'group' => $data['group'],
+					'editor' => 'TYPO3.Neos/Inspector/Editors/TextAreaEditor',
+					'editorOptions' => [
+						'rows' => intval($data['rows'])
+					]
+				]
+			]
+		];
+		$validation = $this->getValidatorProperty($data['validators']);
+		if (count($validation)) {
+			$textAreaProperty[$name][key($validation)] = $validation[key($validation)];
+		}
+
+		return $textAreaProperty;
+	}
+
+	/**
+	 * @param $data
+	 *
+	 * @return array
+	 */
+	public function generateSelectProperty($data) {
+		$name = lcfirst(trim($data['name']));
+		$selectProperty[$name] = [
+			'type' => 'string',
+			'defaultValue' => $data['defaultValue'],
+			'ui' => [
+				'label' => $data['label'],
+				'inspector' => [
+					'group' => $data['group'],
+					'editor' => 'TYPO3.Neos/Inspector/Editors/SelectBoxEditor',
+					'editorOptions' => [
+						'allowEmpty' => true,
+						'placeholder' => 'Select ' . $name . ' options'
+					]
+				]
+			]
+		];
+
+		$arrOptions = explode(PHP_EOL, $data['options']);
+		if (count($arrOptions)) {
+			foreach ($arrOptions as $option) {
+				$arrOption = explode(':', trim($option));
+				if (count($arrOption)) {
+					$selectProperty[$name]['ui']['inspector']['editorOptions']['values'][trim($arrOption[0])] = [
+						'label' => trim($arrOption[1])
+					];
+				}
+			}
+		}
+
+		$validation = $this->getValidatorProperty($data['validators']);
+		if (count($validation)) {
+			$selectProperty[$name][key($validation)] = $validation[key($validation)];
+
+			/* Exclude allowEmpty in editorOption when apply NotEmptyValidator */
+			foreach ($validation as $validator) {
+				if (key($validator) == 'TYPO3.Neos/Validation/NotEmptyValidator') {
+					unset($selectProperty[$name]['ui']['inspector']['editorOptions']['allowEmpty']);
+				}
+			}
+		}
+
+		return $selectProperty;
+	}
+
+	/**
+	 * @param $data
+	 *
+	 * @return array
+	 */
+	public function generateStringProperty($data) {
+		$property = [];
+		if ($data['type']['inlineEditable']['isInlineEditable']) {
+			$adjustData = [
+				'name' => $data['name'],
+				'defaultValue' => $data['defaultValue'],
+				'placeholder' => $data['type']['inlineEditable']['placeholder']
+			];
+			$property = $this->generateInlineEditableProperty($adjustData);
+		} else if ($data['type']['editorType'] == 'default') {
+			$adjustData = [
+				'name' => $data['name'],
+				'label' => $data['label'],
+				'defaultValue' => $data['defaultValue'],
+				'placeholder' => $data['type']['editorText']['placeholder'],
+				'group' => isset($data['documentGroup']) ? trim($data['documentGroup']) : 'document',
+				'validators' => $data['validators']
+			];
+			$property = $this->generateSingleTextProperty($adjustData);
+		} else if ($data['type']['editorType'] == 'TYPO3.Neos/Inspector/Editors/TextAreaEditor') {
+			$adjustData = [
+				'name' => $data['name'],
+				'label' => $data['label'],
+				'defaultValue' => $data['defaultValue'],
+				'rows' => $data['type']['editorTextArea']['rows'],
+				'group' => isset($data['documentGroup']) ? trim($data['documentGroup']) : 'document',
+				'validators' => $data['validators']
+			];
+			$property = $this->generateTextAreaProperty($adjustData);
+		} else if ($data['type']['editorType'] == 'TYPO3.Neos/Inspector/Editors/SelectBoxEditor') {
+			$adjustData = [
+				'name' => $data['name'],
+				'label' => $data['label'],
+				'defaultValue' => $data['defaultValue'],
+				'options' => $data['type']['editorSelect']['options'],
+				'group' => isset($data['documentGroup']) ? trim($data['documentGroup']) : 'document',
+				'validators' => $data['validators']
+			];
+			$property = $this->generateSelectProperty($adjustData);
+		}
+
+		return $property;
 	}
 
 	/**
@@ -75,9 +284,9 @@ class PropertyTemplateService {
 		return [
 			trim($data['name']) => [
 				'type' => $type,
-				'defaultValue' => trim($data['defaultValue']),
+				'defaultValue' => $data['defaultValue'],
 				'ui' => [
-					'label' => trim($data['label']),
+					'label' => $data['label'],
 					'reloadIfChanged' => true,
 					'inspector' => [
 						'group' => isset($data['documentGroup']) ? trim($data['documentGroup']) : 'document',

@@ -75,7 +75,6 @@ abstract class AbstractNodeType {
 	public function __construct($type = 'content') {
 		$this->type = $type;
 		$this->assignTemplate();
-		$this->clearGenerateFiles();
 	}
 
 	/**
@@ -184,5 +183,9 @@ abstract class AbstractNodeType {
 				FileService::delete($file);
 			}
 		}
+	}
+
+	public function generateHtmlBaseOnProperties($properties, $param) {
+
 	}
 }

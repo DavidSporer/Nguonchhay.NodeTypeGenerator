@@ -18,3 +18,21 @@
     '@controller': 'NodeGenerator'
     '@action': 'generating'
   appendExceedingArguments: TRUE
+
+-
+  name: 'Cofirming generating nodetype'
+  uriPattern: 'confirm'
+  httpMethods: ['GET']
+  defaults:
+    '@controller': 'NodeGenerator'
+    '@action': 'confirm'
+  appendExceedingArguments: TRUE
+
+-
+  name: 'Setup generating nodetype into active site'
+  uriPattern: 'setupnodetype'
+  httpMethods: ['POST']
+  defaults:
+    '@controller': 'NodeGenerator'
+    '@action': 'setupNodeType'
+  appendExceedingArguments: TRUE

@@ -78,12 +78,13 @@ class DocumentNodeType extends AbstractNodeType {
 		}
 
 		/* Generate properties */
-		$documentContent[$configContent['name']]['properties']['layout']['defaultValue'] = ucfirst($data['info']['name']);
+		$documentContent[$configContent['name']]['properties']['layout']['defaultValue'] = lcfirst($data['info']['name']);
 		if (isset($data['properties']) && count($data['properties'])) {
 			$properties = $this->templateService->generateProperties($groupName, $data['properties']);
 			if (count($properties)) {
-				foreach ($properties as $name => $property) {
-					$documentContent[$configContent['name']]['properties'][$name] = $property;
+				foreach ($properties as $property) {
+					$name = key($property);
+					$documentContent[$configContent['name']]['properties'][$name] = $property[$name];
 				}
 			}
 		}
@@ -97,7 +98,6 @@ class DocumentNodeType extends AbstractNodeType {
 	 * Generate fusion (typoscript) file
 	 */
 	public function generateFusion() {
-		\TYPO3\Flow\var_dump($this->content);
 		if (count($this->content)) {
 			$documentName = key($this->content);
 			/* Prepare params to replace funsion template contents */
@@ -140,12 +140,36 @@ class DocumentNodeType extends AbstractNodeType {
 			/* Prepare params to replace html template contents */
 			$arrSiteKeys = explode(':', $documentName);
 			$params = [
-				'content' => ''
+				'content' => '',
+				'properties' => ''
 			];
+
 			/* Child nodes fusion */
 			if (isset($this->content[$documentName]['childNodes'])) {
 				foreach ($this->content[$documentName]['childNodes'] as $name => $childNode) {
 					$params['content'] .= "{content." . lcfirst($name) . " -> f:format.raw()}\n\t\t\t";
+				}
+			}
+
+			/* Display all properties of configuration to template */
+			if (isset($this->content[$documentName]['properties'])) {
+				foreach ($this->content[$documentName]['properties'] as $name => $property) {
+					if ($name != 'layout') {
+						$type = $property['type'];
+						if ($type == 'integer') {
+							$params['properties'] .= "\n {$name}";
+						} else if ($type == 'string') {
+							if (isset($property['ui']['inlineEditable'])) {
+								$params['properties'] .= "\n\t\t\t<div{attributes -> f:format.raw()}>\n\t\t\t\t{neos:contentElement.editable(property: '$name')}\n\t\t\t</div>";
+							} else {
+								$params['properties'] .= "\n {$name}";
+							}
+						} else if ($type == 'DateTime') {
+							$params['properties'] .= "\n\t\t\t" . '<f:if condition="{' . $name . '}"><f:format.date format="' . $property['ui']['inspector']['editorOptions']['format'] . '">{' . $name . '}</f:format.date></f:if>';
+						} else if ($type == 'TYPO3\Media\Domain\Model\ImageInterface') {
+							$params['properties'] .= "\n\t\t\t" . '<f:if condition="{' . $name . '}">' . "\t\t\t\t" . '<media:image asset="{' . $name . '}" alt="{alternativeText}" title="{title}" width="{width}" maximumWidth="{maximumWidth}" height="{height}" maximumHeight="{maximumHeight}" allowUpScaling="{allowUpScaling}" allowCropping="{allowCropping}" />' . "\t\t\t" . '</f:if>';
+						}
+					}
 				}
 			}
 

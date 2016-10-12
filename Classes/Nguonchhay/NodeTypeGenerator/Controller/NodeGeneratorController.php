@@ -6,9 +6,12 @@ namespace Nguonchhay\NodeTypeGenerator\Controller;
  **************************************************************************/
 
 use Nguonchhay\NodeTypeGenerator\Domain\Model\DocumentNodeType;
+use Nguonchhay\NodeTypeGenerator\Service\FileService;
 use TYPO3\Flow\Annotations as Flow;
 
 class NodeGeneratorController extends AbstractController {
+
+	const TEMP_PATH = FLOW_PATH_PACKAGES . 'Application/Nguonchhay.NodeTypeGenerator/Resources/Private/StaticTemplates/Temporary';
 
 	/**
 	 * @Flow\Inject
@@ -43,17 +46,91 @@ class NodeGeneratorController extends AbstractController {
 	public function generatingAction() {
 		$arguments = $this->request->getArguments();
 		$isDocument = intval($arguments['info']['isDocument']);
+		$this->documentNodeType->clearGenerateFiles();
 		if ($isDocument) {
 			$this->documentNodeType->generateDocumentNodeType($arguments);
 		} else {
 
 		}
-		die();
+		//$this->redirect('confirm', 'NodeGenerator', 'Nguonchhay.NodeTypeGenerator', ['isDocument' => $isDocument]);
 		$this->redirect('confirm', null, null, ['isDocument' => $isDocument]);
 	}
 
-	public function confirm($isDocument) {
-		die();
+	/**
+	 * @param boolean $isDocument
+	 */
+	public function confirmAction($isDocument) {
+		$nodetype = [
+			'config' => [],
+			'fusion' => [],
+			'template' => []
+		];
+
+		$files = glob(self::TEMP_PATH . '/*');
+		$hasFile = false;
+		foreach($files as $file) {
+			if(is_file($file)) {
+				$filename = basename($file);
+				$extension = pathinfo($filename, PATHINFO_EXTENSION);
+				if ($extension == 'yaml') {
+					$nodetype['config'] = [
+						'id' => 'config',
+						'filename' => $filename,
+						'content' => FileService::read(self::TEMP_PATH . '/' . $filename)
+					];
+					$hasFile = true;
+				} else if($extension == 'ts2') {
+					$nodetype['fusion'] = [
+						'id' => 'fusion',
+						'filename' => $filename,
+						'content' => FileService::read(self::TEMP_PATH . '/' . $filename)
+					];
+					$hasFile = true;
+				} else if($extension == 'html') {
+					$nodetype['template'] = [
+						'id' => 'template',
+						'filename' => $filename,
+						'content' => FileService::read(self::TEMP_PATH . '/' . $filename)
+					];
+					$hasFile = true;
+				}
+			}
+		}
+
+		if (! $hasFile) {
+			$this->redirect('generateForm');
+		}
+
+		$this->view->assign('isDocument', $isDocument);
+		$this->view->assign('nodetype', $nodetype);
+	}
+
+	/**
+	 * Copy all generated files to active site
+	 */
+	public function setupNodeTypeAction() {
+		$arguments = $this->request->getArguments();
+		$files = glob(self::TEMP_PATH . '/*');
+		$baseDestination = FLOW_PATH_PACKAGES . 'Sites/' . $this->getActiveSiteKey();
+		foreach($files as $file) {
+			if(is_file($file)) {
+				$filename = basename($file);
+				$extension = pathinfo($filename, PATHINFO_EXTENSION);
+				if ($extension == 'yaml') {
+					copy(self::TEMP_PATH . '/' . $filename, $baseDestination . '/Configuration/' . $filename);
+				} else if($extension == 'ts2') {
+					$fusionDestination = $baseDestination . '/Resources/Private/TypoScript/Root.ts2';
+					$fusionSite = FileService::read($fusionDestination);
+					$fusionSite .= "\n" . $arguments['fusion'];
+					FileService::write($fusionDestination, $fusionSite);
+				} else if($extension == 'html') {
+					$templateSite = $baseDestination . '/Resources/Private/Templates/Page';
+					FileService::write($templateSite . '/' . $filename, $arguments['template']);
+				}
+			}
+		}
+
+		$this->view->assign('isDocument', $arguments['isDocument']);
 	}
 
 	/**

@@ -1,0 +1,16 @@
+<f:layout name="Default" />
+
+<f:section name="Content">
+	<div class="col-md-12 text-md-center">
+		<h1>Congratulation</h1>
+		<p>
+			You can set up your {f:if(condition: isDocument, then: 'Document', else: 'Content')} NodeType successfully...!
+		</p>
+		<p>
+			Go to back end and try to add this {f:if(condition: isDocument, then: 'Document', else: 'Content')} nodetype
+		</p>
+		<f:link.action action="generateForm" controller="NodeGenerator" package="Nguonchhay.NodeTypeGenerator" class="btn btn-primary">
+			<i class="fa fa-long-arrow-left" aria-hidden="true"></i> Back to generate a new nodetype
+		</f:link.action>
+	</div>
+</f:section>

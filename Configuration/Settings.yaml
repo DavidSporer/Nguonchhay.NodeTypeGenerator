@@ -26,11 +26,11 @@ Nguonchhay:
         'TYPO3.Neos.NodeTypes:ContentReferences': 'Content references'
         'TYPO3.Neos.NodeTypes:AssetList': 'Assets'
       validators:
-        'notEmpty': 'Not empty'
-        'datetime': 'DateTime validator'
-        'float': 'FloatValidator'
-        'integer': 'IntegerValidator'
-        'numberRange': 'NumberRangeValidator'
+        'TYPO3.Neos/Validation/NotEmptyValidator': 'Not empty'
+        'TYPO3.Neos/Validation/DateTimeValidator': 'DateTime validator'
+        'TYPO3.Neos/Validation/FloatValidator': 'Float validator'
+        'TYPO3.Neos/Validation/IntegerValidator': 'Integer validator'
+        'TYPO3.Neos/Validation/NumberRangeValidator': 'Number range validator'
       propertyTypes:
         'boolean': 'Boolean'
         'integer': 'Integer'

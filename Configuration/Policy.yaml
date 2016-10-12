@@ -5,7 +5,7 @@
 privilegeTargets:
   TYPO3\Flow\Security\Authorization\Privilege\Method\MethodPrivilege:
     'Nguonchhay.NodeTypeGenerator:NodeGeneratorControllerActions':
-      matcher: 'method(Nguonchhay\NodeTypeGenerator\Controller\NodeGeneratorController->(generateForm|generating|confirm)Action())'
+      matcher: 'method(Nguonchhay\NodeTypeGenerator\Controller\NodeGeneratorController->(generateForm|generating|confirm|setupNodeType)Action())'
 
 roles:
   'TYPO3.Flow:Everybody':

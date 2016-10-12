@@ -118,7 +118,7 @@ class TemplateService {
 				}
 				$property = $this->propertyTemplateService->getPropertyTemplate($arrProperty['propertyType'], $arrProperty);
 				if (count($property)) {
-					$properties[trim($arrProperty['name'])] = $property;
+					$properties[] = $property;
 				}
 			}
 		}

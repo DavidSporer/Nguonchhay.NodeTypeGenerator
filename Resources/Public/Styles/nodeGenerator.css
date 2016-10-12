@@ -89,3 +89,8 @@ a:hover {
 .generating-form .table-properties td {
   text-align: left;
 }
+
+/* line 75, ../../../Private/Assets/Styles/Components/_general.scss */
+.nodetype-preview-textarea {
+  min-height: 500px;
+}
