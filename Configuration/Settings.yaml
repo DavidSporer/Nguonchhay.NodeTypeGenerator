@@ -50,6 +50,5 @@ Nguonchhay:
         'TYPO3.Neos/Inspector/Editors/TextAreaEditor': 'Text area'
         'TYPO3.Neos/Inspector/Editors/SelectBoxEditor': 'Select'
         'TYPO3.Neos/Inspector/Editors/LinkEditor': 'Link'
-
     fontAwesome: 'http://fontawesome.io/icons'
     staticTemplatePath: 'resource://Nguonchhay.NodeTypeGenerator/Private/StaticTemplates'

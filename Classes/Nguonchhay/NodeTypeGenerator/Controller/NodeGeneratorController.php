@@ -5,6 +5,7 @@ namespace Nguonchhay\NodeTypeGenerator\Controller;
  * This file is part of the Nguonchhay.NodeTyoeGenerator package.          *
  **************************************************************************/
 
+use Nguonchhay\NodeTypeGenerator\Domain\Model\ContentNodeType;
 use Nguonchhay\NodeTypeGenerator\Domain\Model\DocumentNodeType;
 use Nguonchhay\NodeTypeGenerator\Service\FileService;
 use TYPO3\Flow\Annotations as Flow;
@@ -19,6 +20,11 @@ class NodeGeneratorController extends AbstractController {
 	 */
 	protected $documentNodeType;
 
+	/**
+	 * @Flow\Inject
+	 * @var ContentNodeType
+	 */
+	protected $contentNodeType;
 
 
 	/**
@@ -46,13 +52,14 @@ class NodeGeneratorController extends AbstractController {
 	public function generatingAction() {
 		$arguments = $this->request->getArguments();
 		$isDocument = intval($arguments['info']['isDocument']);
-		$this->documentNodeType->clearGenerateFiles();
 		if ($isDocument) {
+			$this->documentNodeType->clearGenerateFiles();
 			$this->documentNodeType->generateDocumentNodeType($arguments);
 		} else {
-
+			$this->contentNodeType->clearGenerateFiles();
+			$this->contentNodeType->generateContentNodeType($arguments);
 		}
-		//$this->redirect('confirm', 'NodeGenerator', 'Nguonchhay.NodeTypeGenerator', ['isDocument' => $isDocument]);
+
 		$this->redirect('confirm', null, null, ['isDocument' => $isDocument]);
 	}
 
@@ -119,17 +126,25 @@ class NodeGeneratorController extends AbstractController {
 				if ($extension == 'yaml') {
 					copy(self::TEMP_PATH . '/' . $filename, $baseDestination . '/Configuration/' . $filename);
 				} else if($extension == 'ts2') {
-					$fusionDestination = $baseDestination . '/Resources/Private/TypoScript/Root.ts2';
-					$fusionSite = FileService::read($fusionDestination);
-					$fusionSite .= "\n" . $arguments['fusion'];
-					FileService::write($fusionDestination, $fusionSite);
+					$fusion = '';
+					if ($arguments['isDocument']) {
+						$fusionDestination = $baseDestination . '/Resources/Private/TypoScript/Root.ts2';
+						$fusion = FileService::read($fusionDestination);
+					} else {
+						$fusionDestination = $baseDestination . '/Resources/Private/TypoScript/NodeTypes/' . $filename;
+					}
+					$fusion .= "\n" . $arguments['fusion'];
+					FileService::write($fusionDestination, $fusion);
 				} else if($extension == 'html') {
-					$templateSite = $baseDestination . '/Resources/Private/Templates/Page';
+					if ($arguments['isDocument']) {
+						$templateSite = $baseDestination . '/Resources/Private/Templates/Page';
+					} else {
+						$templateSite = $baseDestination . '/Resources/Private/Templates/NodeTypes';
+					}
 					FileService::write($templateSite . '/' . $filename, $arguments['template']);
 				}
 			}
 		}
-
 		$this->view->assign('isDocument', $arguments['isDocument']);
 	}
 

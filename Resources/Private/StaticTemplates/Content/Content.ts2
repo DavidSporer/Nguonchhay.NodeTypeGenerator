@@ -1,4 +1,7 @@
-prototype({content}) < prototype(TYPO3.Neos:Content) {
-	templatePath = 'resource://{contentPath}'
-	attributes.class = '{class}'
+prototype(###content###) < prototype(###superType###) {
+	templatePath = 'resource://###siteKey###/Private/Templates/NodeTypes/###contentFilename###'
+	attributes.class = '###class###'
+	###childNodes###
+	###properties###
+	###superTypes###
 }

@@ -185,7 +185,55 @@ abstract class AbstractNodeType {
 		}
 	}
 
-	public function generateHtmlBaseOnProperties($properties, $param) {
+	/**
+	 * @param array $superTypes
+	 * @param array $params
+	 */
+	public function generateSuperTypesToTemplate($superTypes, &$params) {
+		array_shift($superTypes);
+		foreach ($superTypes as $superType => $value) {
+			if (strpos('TYPO3.Neos.NodeTypes:TitleMixin', $superType) !== FALSE) {
+				$params['superTypes'] .= "<div{attributes -> f:format.raw()}>\n\t\t\t\t{neos:contentElement.editable(property: 'title')}\n\t\t\t</div>\n\t\t\t";
+			} else if (strpos('TYPO3.Neos.NodeTypes:TextMixin', $superType) !== FALSE) {
+				$params['superTypes'] .= "<div{attributes -> f:format.raw()}>\n\t\t\t\t{neos:contentElement.editable(property: 'text')}\n\t\t\t</div>\n\t\t\t";
+			} else if (strpos('TYPO3.Neos.NodeTypes:ImageMixin', $superType) !== FALSE) {
+				$params['superTypes'] .= '<f:if condition="{image}">' . "\n\t\t\t\t" . '<media:image asset="{image}" alt="{alternativeText}" title="{title}" width="{width}" maximumWidth="{maximumWidth}" height="{height}" maximumHeight="{maximumHeight}" allowUpScaling="{allowUpScaling}" allowCropping="{allowCropping}" />' . "\n\t\t\t" . "</f:if>\n\t\t\t";
+			} else if (strpos('TYPO3.Neos.NodeTypes:LinkMixin', $superType) !== FALSE) {
+				$params['properties'] .= "<a href=\"{link -> f:format.raw()}\">{link -> f:format.raw()}</a>\n\t\t\t";
+			} else if (strpos('TYPO3.Neos.NodeTypes:ContentReferences', $superType) !== FALSE || strpos('TYPO3.Neos.NodeTypes:AssetList', $superType) !== FALSE) {
+				$params['superTypes'] .= "<!--Add your fusion here-->\n\t\t\t";
+			}
+		}
+	}
 
+	/**
+	 * @param array $properties
+	 * @param array $params
+	 */
+	public function generatePropertiesToTemplate($properties, &$params) {
+		foreach ($properties as $name => $property) {
+			if ($name != 'layout') {
+				$type = $property['type'];
+				if ($type == 'integer') {
+					$params['properties'] .= "\n\t<div>{" . $name . "}</div>";
+				} else if ($type == 'string') {
+					if (isset($property['ui']['inlineEditable'])) {
+						$params['properties'] .= "\n\t\t\t<div{attributes -> f:format.raw()}>\n\t\t\t\t{neos:contentElement.editable(property: '$name')}\n\t\t\t</div>";
+					} else {
+						$params['properties'] .= "\n\t\t\t{" . $name . "}";
+					}
+				} else if ($type == 'DateTime') {
+					$params['properties'] .= "\n\t\t\t" . '<f:if condition="{' . $name . '}"><f:format.date format="' . $property['ui']['inspector']['editorOptions']['format'] . '">{' . $name . '}</f:format.date></f:if>';
+				} else if ($type == 'TYPO3\Media\Domain\Model\ImageInterface') {
+					$params['properties'] .= "\n\t\t\t" . '<f:if condition="{' . $name . '}">' . "\t\t\t\t" . '<media:image asset="{' . $name . '}" alt="{alternativeText}" title="{title}" width="{width}" maximumWidth="{maximumWidth}" height="{height}" maximumHeight="{maximumHeight}" allowUpScaling="{allowUpScaling}" allowCropping="{allowCropping}" />' . "\t\t\t" . '</f:if>';
+				} else if ($type == 'reference') {
+					$params['properties'] .= "\n\t\t\t<a href='{" . $name . "}'>{" . ucfirst($name) . ' -> f:format.raw()}</a>';
+				} else if ($type == 'references') {
+					$params['properties'] .= "\n\t\t\t<!-- Add loop for $name references -->";
+				} else if ($type == 'TYPO3\Media\Domain\Model\Asset' || $type == 'array<TYPO3\Media\Domain\Model\Asset>') {
+					$params['properties'] .= "\n\t\t\t<!-- Add loop for asset $name -->";
+				}
+			}
+		}
 	}
 }

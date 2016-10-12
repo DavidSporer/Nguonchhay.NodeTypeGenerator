@@ -3,5 +3,7 @@
 	body {
 		templatePath = 'resource://###siteKey###/Private/Templates/Page/###documentFilename###'
 		###content###
+		###properties###
+		###superTypes###
 	}
 }

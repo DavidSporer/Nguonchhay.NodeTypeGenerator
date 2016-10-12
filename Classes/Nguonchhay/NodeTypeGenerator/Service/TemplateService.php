@@ -19,11 +19,18 @@ class TemplateService {
 
 	/**
 	 * @param array $data
+	 * @param string $nodeType
 	 *
 	 * @return array
 	 */
-	public function generateDocumentConfigTemplate($data) {
-		$superTypes['TYPO3.Neos.NodeTypes:Page'] = true;
+	public function generateDocumentConfigTemplate($data, $nodeType = 'content') {
+		$superTypes = [];
+		if ($nodeType == 'content') {
+			$superTypes['TYPO3.Neos:Content'] = true;
+		} else if ($nodeType == 'document') {
+			$superTypes['TYPO3.Neos.NodeTypes:Page'] = true;
+		}
+
 		foreach ($data['superTypes'] as $superType) {
 			$superTypes[$superType] = true;
 		}
@@ -116,6 +123,7 @@ class TemplateService {
 				if ($groupName != '') {
 					$arrProperty['documentGroup'] = $groupName;
 				}
+
 				$property = $this->propertyTemplateService->getPropertyTemplate($arrProperty['propertyType'], $arrProperty);
 				if (count($property)) {
 					$properties[] = $property;

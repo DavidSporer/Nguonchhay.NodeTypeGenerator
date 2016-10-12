@@ -35,16 +35,21 @@ class PropertyTemplateService {
 	}
 
 	/**
+	 * @param $property
 	 * @param $validators
 	 *
-	 * @return array
+	 * @return mixed
 	 */
-	public function getValidatorProperty($validators) {
-		$propertyValidators['validation'] = [];
+	public function assignValidatorProperty(&$property, $validators) {
+		$name = key($property);
 		foreach ($validators as $validator) {
-			$propertyValidators['validation'][$validator] = [];
+			$validator = trim($validator);
+			$property[$name]['validation'][$validator] = [];
+
+			if ($validator == 'TYPO3.Neos/Validation/NotEmptyValidator') {
+				unset($property[$name]['ui']['inspector']['editorOptions']['allowEmpty']);
+			}
 		}
-		return $propertyValidators;
 	}
 
 	/**
@@ -53,23 +58,25 @@ class PropertyTemplateService {
 	 * @return array
 	 */
 	public function generateDateTimeProperty($data) {
-		return [
-			lcfirst(trim($data['name'])) => [
-				'type' => 'DateTime',
-				'defaultValue' => $data['defaultValue'],
-				'ui' => [
-					'label' => $data['label'],
-					'reloadIfChanged' => true,
-					'inspector' => [
-						'group' => isset($data['documentGroup']) ? trim($data['documentGroup']) : 'document',
-						'position' => 50,
-						'editorOptions' => [
-							'format' => 'd.m.Y'
-						]
+		$name = lcfirst(trim($data['name']));
+		$datetimeProperty[$name] = [
+			'type' => 'DateTime',
+			'defaultValue' => $data['defaultValue'],
+			'ui' => [
+				'label' => $data['label'],
+				'reloadIfChanged' => true,
+				'inspector' => [
+					'group' => isset($data['documentGroup']) ? trim($data['documentGroup']) : 'document',
+					'position' => 50,
+					'editorOptions' => [
+						'format' => 'd.m.Y'
 					]
 				]
 			]
 		];
+		$this->assignValidatorProperty($datetimeProperty, $data['validators']);
+
+		return $datetimeProperty;
 	}
 
 	/**
@@ -136,10 +143,7 @@ class PropertyTemplateService {
 				]
 			]
 		];
-		$validation = $this->getValidatorProperty($data['validators']);
-		if (count($validation)) {
-			$singleTextProperty[$name][key($validation)] = $validation[key($validation)];
-		}
+		$this->assignValidatorProperty($singleTextProperty, $data['validators']);
 
 		return $singleTextProperty;
 	}
@@ -165,10 +169,7 @@ class PropertyTemplateService {
 				]
 			]
 		];
-		$validation = $this->getValidatorProperty($data['validators']);
-		if (count($validation)) {
-			$textAreaProperty[$name][key($validation)] = $validation[key($validation)];
-		}
+		$this->assignValidatorProperty($textAreaProperty, $data['validators']);
 
 		return $textAreaProperty;
 	}
@@ -207,18 +208,7 @@ class PropertyTemplateService {
 				}
 			}
 		}
-
-		$validation = $this->getValidatorProperty($data['validators']);
-		if (count($validation)) {
-			$selectProperty[$name][key($validation)] = $validation[key($validation)];
-
-			/* Exclude allowEmpty in editorOption when apply NotEmptyValidator */
-			foreach ($validation as $validator) {
-				if (key($validator) == 'TYPO3.Neos/Validation/NotEmptyValidator') {
-					unset($selectProperty[$name]['ui']['inspector']['editorOptions']['allowEmpty']);
-				}
-			}
-		}
+		$this->assignValidatorProperty($selectProperty, $data['validators']);
 
 		return $selectProperty;
 	}
@@ -281,20 +271,22 @@ class PropertyTemplateService {
 	 * @return array
 	 */
 	private function generateProperty($type, $data) {
-		return [
-			trim($data['name']) => [
-				'type' => $type,
-				'defaultValue' => $data['defaultValue'],
-				'ui' => [
-					'label' => $data['label'],
-					'reloadIfChanged' => true,
-					'inspector' => [
-						'group' => isset($data['documentGroup']) ? trim($data['documentGroup']) : 'document',
-						'position' => 50
-					]
+		$name = lcfirst(trim($data['name']));
+		$property[$name] = [
+			'type' => $type,
+			'defaultValue' => $data['defaultValue'],
+			'ui' => [
+				'label' => $data['label'],
+				'reloadIfChanged' => true,
+				'inspector' => [
+					'group' => isset($data['documentGroup']) ? trim($data['documentGroup']) : 'document',
+					'position' => 50
 				]
 			]
 		];
+		$this->assignValidatorProperty($property, $data['validators']);
+
+		return $property;
 	}
 
 	/**

@@ -9,14 +9,14 @@ namespace Nguonchhay\NodeTypeGenerator\Domain\Model;
 use Nguonchhay\NodeTypeGenerator\Service\FileService;
 use TYPO3\Flow\Annotations as Flow;
 
-class DocumentNodeType extends AbstractNodeType {
+class ContentNodeType extends AbstractNodeType {
 
-	const PREFIX_DOCUMENT_NODETYPE = 'Documents';
+	const PREFIX_DOCUMENT_NODETYPE = 'Contents';
 
 
 
 	public function __construct() {
-		parent::__construct('document');
+		parent::__construct('content');
 		$this->content = [];
 	}
 
@@ -26,8 +26,8 @@ class DocumentNodeType extends AbstractNodeType {
 	 * @return string
 	 */
 	public function getConfigFilename($name) {
-		$documentNodeTypeFilename = self::PREFIX_NODETYPE_FILENAME . '.' . self::PREFIX_DOCUMENT_NODETYPE . '.' . ucfirst($name);
-		return $documentNodeTypeFilename;
+		$contentNodeTypeFilename = self::PREFIX_NODETYPE_FILENAME . '.' . self::PREFIX_DOCUMENT_NODETYPE . '.' . ucfirst($name);
+		return $contentNodeTypeFilename;
 	}
 
 	/**
@@ -55,13 +55,13 @@ class DocumentNodeType extends AbstractNodeType {
 			'icon' => $data['info']['icon'],
 			'group' => $data['info']['group']
 		];
-		$documentContent = $this->templateService->generateDocumentConfigTemplate($configContent, 'document');
+		$content = $this->templateService->generateDocumentConfigTemplate($configContent, 'content');
 
 		/* Generate child nodes */
 		if (isset($data['info']['childNodes']) && $data['info']['childNodes'] != '') {
 			$childNodes = $this->templateService->generateChildNodesTemplate($data['info']['childNodes']);
 			if (count($childNodes)) {
-				$documentContent[$configContent['name']]['childNodes'] = $childNodes;
+				$content[$configContent['name']]['childNodes'] = $childNodes;
 			}
 		}
 
@@ -69,29 +69,28 @@ class DocumentNodeType extends AbstractNodeType {
 		/* Generate group */
 		if (isset($data['info']['groupName']) && $data['info']['groupName'] != '') {
 			$groupName = trim($data['info']['groupName']);
-			$documentContent[$configContent['name']]['ui']['inspector'] = $this->templateService->generateGroupTemplate($groupName);
+			$content[$configContent['name']]['ui']['inspector'] = $this->templateService->generateGroupTemplate($groupName);
 		}
 
 		/* Generate help message */
 		if (isset($data['info']['helperMessage']) && $data['info']['helperMessage'] != '') {
-			$documentContent[$configContent['name']]['ui']['helper'] = $this->templateService->generateHelpMessageTemplate($data['info']['helperMessage']);
+			$content[$configContent['name']]['ui']['helper'] = $this->templateService->generateHelpMessageTemplate($data['info']['helperMessage']);
 		}
 
 		/* Generate properties */
-		$documentContent[$configContent['name']]['properties']['layout']['defaultValue'] = lcfirst($data['info']['name']);
 		if (isset($data['properties']) && count($data['properties'])) {
 			$properties = $this->templateService->generateProperties($groupName, $data['properties']);
 			if (count($properties)) {
 				foreach ($properties as $property) {
 					$name = key($property);
-					$documentContent[$configContent['name']]['properties'][$name] = $property[$name];
+					$content[$configContent['name']]['properties'][$name] = $property[$name];
 				}
 			}
 		}
 
-		/* Create document nodetype file */
-		$this->yamlSource->save($this->getTemporaryPath() . '/' . $this->getConfigFilename($data['info']['name']), $documentContent);
-		$this->content = $documentContent;
+		/* Create content nodetype file */
+		$this->yamlSource->save($this->getTemporaryPath() . '/' . $this->getConfigFilename($data['info']['name']), $content);
+		$this->content = $content;
 	}
 
 	/**
@@ -99,61 +98,50 @@ class DocumentNodeType extends AbstractNodeType {
 	 */
 	public function generateFusion() {
 		if (count($this->content)) {
-			$documentName = key($this->content);
+			$contentName = key($this->content);
 			/* Prepare params to replace funsion template contents */
-			$arrSiteKeys = explode(':', $documentName);
+			$arrSiteKeys = explode(':', $contentName);
 			$params = [
-				'documentLayout' => lcfirst($arrSiteKeys[1]),
-				'documentFilename' => ucfirst($arrSiteKeys[1]) . '.html',
+				'superType' => 'TYPO3.Neos:Content',
+				'content' => $contentName,
+				'contentFilename' => ucfirst($arrSiteKeys[1]) . '.html',
 				'siteKey' => $arrSiteKeys[0],
-				'content' => '',
+				'class' => strtolower($arrSiteKeys[1]),
+				'childNodes' => '',
 				'properties' => '',
 				'superTypes' => ''
 			];
 
 			/* SuperTypes to fusion */
-			if (isset($this->content[$documentName]['superTypes'])) {
-				$superTypes = $this->content[$documentName]['superTypes'];
+			if (isset($this->content[$contentName]['superTypes'])) {
+				$superTypes = $this->content[$contentName]['superTypes'];
 				array_shift($superTypes);
 				foreach ($superTypes as $superType => $value) {
-					if (strpos('TYPO3.Neos.NodeTypes:TitleMixin', $superType) !== FALSE) {
-						$params['superTypes'] .= 'title = ${q(node).property' . "('title')}\n\t\t";
-					} else if (strpos('TYPO3.Neos.NodeTypes:TextMixin', $superType) !== FALSE) {
-						$params['superTypes'] .= 'text = ${q(node).property' . "('text')}\n\t\t";
-					} else if (strpos('TYPO3.Neos.NodeTypes:ImageMixin', $superType) !== FALSE) {
-						$params['superTypes'] .= 'image = ${q(node).property' . "('image')}\n\t\t";
-					} else if (strpos('TYPO3.Neos.NodeTypes:LinkMixin', $superType) !== FALSE) {
-						$params['superTypes'] .= 'link = ${q(node).property' . "('link')}\n\t\t";
+					if (strpos('TYPO3.Neos.NodeTypes:LinkMixin', $superType) !== FALSE) {
 						$params['superTypes'] .= "link.@process.convertUris = TYPO3.Neos:ConvertUris";
-					} else if (strpos('TYPO3.Neos.NodeTypes:ContentReferences', $superType) !== FALSE || strpos('TYPO3.Neos.NodeTypes:AssetList', $superType) !== FALSE) {
-						$params['superTypes'] .= "<!--Add your fusion here-->\n\t\t";
+						break;
 					}
 				}
 			}
 
 			/* Child nodes fusion */
-			if (isset($this->content[$documentName]['childNodes'])) {
-				$content = "content {";
-				foreach ($this->content[$documentName]['childNodes'] as $name => $childNode) {
-					$content .= $this->getFusionContentTemplate(lcfirst($name));
+			if (isset($this->content[$contentName]['childNodes'])) {
+				$content = "";
+				foreach ($this->content[$contentName]['childNodes'] as $childNode) {
+					$content .= trim($this->getFusionContentTemplate($childNode));
 				}
-				$params['content'] .= $content . "}";
+				$params['childNodes'] = $content;
 			}
 
 			/* Properties fusion */
-			if (isset($this->content[$documentName]['properties'])) {
+			if (isset($this->content[$contentName]['properties'])) {
 				$properties = '';
-				foreach ($this->content[$documentName]['properties'] as $name => $property) {
-					if ($name != 'layout') {
-						$properties .= "\n\t\t" . $name . ' = ${q(node).property' . "('" . $name . "')}";
-
-						$type = $property['type'];
-						if ($type == 'reference') {
-							$properties .= "\n\t\t" . $name .'.@process.convertUris = TYPO3.Neos:ConvertUris';
-						}
+				foreach ($this->content[$contentName]['properties'] as $name => $property) {
+					if ($name != 'layout' && $property['type'] == 'reference') {
+						$properties .= "\n\t" . $name .'.@process.convertUris = TYPO3.Neos:ConvertUris';
 					}
 				}
-				$params['properties'] = $properties;
+				$params['properties'] .= $properties;
 			}
 
 			$fusionTemplate = FileService::read($this->getFusion());
@@ -169,34 +157,36 @@ class DocumentNodeType extends AbstractNodeType {
 	}
 
 	/**
-	 * Generate html template base on generated document nodetype
+	 * Generate html template base on generated content nodetype
 	 */
 	public function generateTemplate() {
 		if (count($this->content)) {
-			$documentName = key($this->content);
+			$contentName = key($this->content);
 			/* Prepare params to replace html template contents */
-			$arrSiteKeys = explode(':', $documentName);
+			$arrSiteKeys = explode(':', $contentName);
 			$params = [
-				'content' => '',
+				'imageNameSpace' => '',
 				'properties' => '',
 				'superTypes' => ''
 			];
 
 			/* SuperTypes to template */
-			if (isset($this->content[$documentName]['superTypes'])) {
-				$this->generateSuperTypesToTemplate($this->content[$documentName]['superTypes'], $params);
+			if (isset($this->content[$contentName]['superTypes'])) {
+				$this->generateSuperTypesToTemplate($this->content[$contentName]['superTypes'], $params);
 			}
 
-			/* Child nodes to template */
-			if (isset($this->content[$documentName]['childNodes'])) {
-				foreach ($this->content[$documentName]['childNodes'] as $name => $childNode) {
-					$params['content'] .= "{content." . lcfirst($name) . " -> f:format.raw()}\n\t\t\t";
+			/* Assign child nodes to template */
+			if (isset($this->content[$contentName]['childNodes'])) {
+				$content = "";
+				foreach ($this->content[$contentName]['childNodes'] as $name => $childNode) {
+					$content .= "\n\t{" . lcfirst($name) . " -> f:format.raw()}";
 				}
+				$params['childNodes'] .= $content;
 			}
 
 			/* Display all properties of configuration to template */
-			if (isset($this->content[$documentName]['properties'])) {
-				$this->generatePropertiesToTemplate($this->content[$documentName]['properties'], $params);
+			if (isset($this->content[$contentName]['properties'])) {
+				$this->generatePropertiesToTemplate($this->content[$contentName]['properties'], $params);
 			}
 
 			$htmlTemplate = FileService::read($this->getTemplate());
@@ -214,21 +204,24 @@ class DocumentNodeType extends AbstractNodeType {
 	/**
 	 * @param $data
 	 */
-	public function generateDocumentNodeType($data) {
+	public function generateContentNodeType($data) {
 		$this->generateConfig($data);
 		$this->generateFusion();
 		$this->generateTemplate();
 	}
 
 	/**
-	 * @param $name
+	 * @param $childNode
 	 *
 	 * @return string
 	 */
-	public function getFusionContentTemplate($name) {
+	public function getFusionContentTemplate($childNode) {
+		$name = lcfirst(key($childNode));
 		return "
 			$name = ContentCollection {
 				nodePath = '$name'
+				content.iterationName = '" . $name . "Iteration'
+				attributes.class = '" . strtolower($name) . "'
 			}
 		";
 	}
