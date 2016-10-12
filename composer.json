@@ -2,6 +2,7 @@
     "name": "nguonchhay/nodetypegenerator",
     "type": "neos-package",
     "description": "Kickstart new nodetype in Neos",
+    "license": "MIT",
     "authors": [
         {
             "name": "Nguonchhay Touch",
