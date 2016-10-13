@@ -1,7 +1,13 @@
 Installation
 ------------
 
-### Add the two required packages to your `composer.json` in the `require-dev` section:
+### Open terminal and run composer require command
+
+```
+composer require --dev nguonchhay/nodetypegenerator dev-master
+```
+
+### Or add directly to your `composer.json` in the `require-dev` section of your directory root:
 
 ```
 "require-dev": {
@@ -9,11 +15,7 @@ Installation
 }
 ```
 
-### Download the package
-
-```
-composer install
-```
+Then download the package: `composer install`
 
 ### Clear caches just to be safe
 
@@ -36,8 +38,17 @@ composer install
   subRoutes:
     NguonchhayNodeTypeGeneratorSubroutes:
       package: 'Nguonchhay.NodeTypeGenerator'
+```
+
+### Generating new document or content nodetype with three easy steps
 
 ```
+    1. Go to generating form `<your-base-url>/nodetypegenerator` and input the nodetype information then submit the form.
+    2. Review generated nodetype. You can adjust fusion(.ts2) and template(.html) base on your real requirement.
+    3. Import gernerated nodetype into your active sites. You can import generated nodetype to active sites.
+```
+
+Then go to back end and test that imported nodetype.
 
 Making change
 -------------
@@ -45,11 +56,10 @@ Making change
 We develop `Nguonchhay.NodeTypeGenerator` by using: 
  
 ```
-    1. AmindLTE theme: for style
-    2. Bower: download AdminLTE theme
-    3. Grunt: compile resources
-    4. CoffeeScript: developing script
-    5. Scss: developing style
+    1. Bower: download font awesome
+    2. Grunt: compile resources
+    3. CoffeeScript: developing script
+    4. Scss: developing style
 ```
 
 ### Install js dependencies and AdminLTE theme using `bower`
