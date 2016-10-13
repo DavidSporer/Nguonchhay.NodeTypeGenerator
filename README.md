@@ -15,7 +15,7 @@ composer require --dev nguonchhay/nodetypegenerator dev-master
 }
 ```
 
-Then download the package: `composer install`
+Then download the package: `composer update nguonchhay/nodetypegenerator`
 
 ### Clear caches just to be safe
 
