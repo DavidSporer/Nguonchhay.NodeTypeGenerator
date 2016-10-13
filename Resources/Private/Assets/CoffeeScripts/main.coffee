@@ -16,9 +16,18 @@ $.fn.onlyNumber = ->
 			return false
 	)
 
+# Remove all space after element lost focus
+$.fn.noSpace = ->
+	this.blur((e)->
+		$self = $(this)
+		$self.val($self.val().replace(/\s/g, ""))
+	)
 
 # Declare class to restrict only character
 $('.only-character').onlyCharacter()
+
+# Declare class to restrict no space
+$('.no-space').noSpace()
 
 # Declare class to restrict only number
 $('.only-number').onlyNumber()

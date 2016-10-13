@@ -17,7 +17,17 @@
     });
   };
 
+  $.fn.noSpace = function() {
+    return this.blur(function(e) {
+      var $self;
+      $self = $(this);
+      return $self.val($self.val().replace(/\s/g, ""));
+    });
+  };
+
   $('.only-character').onlyCharacter();
+
+  $('.no-space').noSpace();
 
   $('.only-number').onlyNumber();
 
