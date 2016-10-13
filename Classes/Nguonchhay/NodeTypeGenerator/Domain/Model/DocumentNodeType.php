@@ -177,6 +177,7 @@ class DocumentNodeType extends AbstractNodeType {
 			/* Prepare params to replace html template contents */
 			$arrSiteKeys = explode(':', $documentName);
 			$params = [
+				'imageNameSpace' => '',
 				'content' => '',
 				'properties' => '',
 				'superTypes' => ''

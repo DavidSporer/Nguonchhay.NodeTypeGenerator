@@ -198,6 +198,7 @@ abstract class AbstractNodeType {
 				$params['superTypes'] .= "<div{attributes -> f:format.raw()}>\n\t\t\t\t{neos:contentElement.editable(property: 'text')}\n\t\t\t</div>\n\t\t\t";
 			} else if (strpos('TYPO3.Neos.NodeTypes:ImageMixin', $superType) !== FALSE) {
 				$params['superTypes'] .= '<f:if condition="{image}">' . "\n\t\t\t\t" . '<media:image asset="{image}" alt="{alternativeText}" title="{title}" width="{width}" maximumWidth="{maximumWidth}" height="{height}" maximumHeight="{maximumHeight}" allowUpScaling="{allowUpScaling}" allowCropping="{allowCropping}" />' . "\n\t\t\t" . "</f:if>\n\t\t\t";
+				$params['imageNameSpace'] .= '{namespace media=TYPO3\Media\ViewHelpers}';
 			} else if (strpos('TYPO3.Neos.NodeTypes:LinkMixin', $superType) !== FALSE) {
 				$params['properties'] .= "<a href=\"{link -> f:format.raw()}\">{link -> f:format.raw()}</a>\n\t\t\t";
 			} else if (strpos('TYPO3.Neos.NodeTypes:ContentReferences', $superType) !== FALSE || strpos('TYPO3.Neos.NodeTypes:AssetList', $superType) !== FALSE) {
