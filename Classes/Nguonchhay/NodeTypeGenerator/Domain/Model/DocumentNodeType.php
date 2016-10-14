@@ -8,6 +8,7 @@ namespace Nguonchhay\NodeTypeGenerator\Domain\Model;
 
 use Nguonchhay\NodeTypeGenerator\Service\FileService;
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Configuration\Source\YamlSource;
 
 class DocumentNodeType extends AbstractNodeType {
 
@@ -28,19 +29,6 @@ class DocumentNodeType extends AbstractNodeType {
 	public function getConfigFilename($name) {
 		$documentNodeTypeFilename = self::PREFIX_NODETYPE_FILENAME . '.' . self::PREFIX_DOCUMENT_NODETYPE . '.' . ucfirst($name);
 		return $documentNodeTypeFilename;
-	}
-
-	/**
-	 * @param $name
-	 *
-	 * @return string
-	 */
-	public function getFusionFilename($name) {
-		return ucfirst($name) . self::NODETYPE_FUSION_EXTENSION;
-	}
-
-	public function getTemplateFilename($name) {
-		return ucfirst($name) . self::NODETYPE_TEMPLATE_EXTENSION;
 	}
 
 	/**
@@ -74,7 +62,7 @@ class DocumentNodeType extends AbstractNodeType {
 
 		/* Generate help message */
 		if (isset($data['info']['helperMessage']) && $data['info']['helperMessage'] != '') {
-			$documentContent[$configContent['name']]['ui']['helper'] = $this->templateService->generateHelpMessageTemplate($data['info']['helperMessage']);
+			$documentContent[$configContent['name']]['ui']['help'] = $this->templateService->generateHelpMessageTemplate($data['info']['helperMessage']);
 		}
 
 		/* Generate properties */
@@ -104,7 +92,7 @@ class DocumentNodeType extends AbstractNodeType {
 			$arrSiteKeys = explode(':', $documentName);
 			$params = [
 				'documentLayout' => lcfirst($arrSiteKeys[1]),
-				'documentFilename' => ucfirst($arrSiteKeys[1]) . '.html',
+				'documentFilename' => $this->getTemplateFilename($arrSiteKeys[1]),
 				'siteKey' => $arrSiteKeys[0],
 				'content' => '',
 				'properties' => '',
@@ -117,9 +105,9 @@ class DocumentNodeType extends AbstractNodeType {
 				array_shift($superTypes);
 				foreach ($superTypes as $superType => $value) {
 					if (strpos('TYPO3.Neos.NodeTypes:TitleMixin', $superType) !== FALSE) {
-						$params['superTypes'] .= 'title = ${q(node).property' . "('title')}\n\t\t";
+						$params['superTypes'] = $this->generateFusionInlineEditableProperty($arrSiteKeys[0], $arrSiteKeys[1], 'title') . "\n\t\t";
 					} else if (strpos('TYPO3.Neos.NodeTypes:TextMixin', $superType) !== FALSE) {
-						$params['superTypes'] .= 'text = ${q(node).property' . "('text')}\n\t\t";
+						$params['superTypes'] = $this->generateFusionInlineEditableProperty($arrSiteKeys[0], $arrSiteKeys[1], 'text') . "\n\t\t";
 					} else if (strpos('TYPO3.Neos.NodeTypes:ImageMixin', $superType) !== FALSE) {
 						$params['superTypes'] .= 'image = ${q(node).property' . "('image')}\n\t\t";
 					} else if (strpos('TYPO3.Neos.NodeTypes:LinkMixin', $superType) !== FALSE) {
@@ -131,7 +119,7 @@ class DocumentNodeType extends AbstractNodeType {
 				}
 			}
 
-			/* Child nodes fusion */
+			/* Child nodes to fusion */
 			if (isset($this->content[$documentName]['childNodes'])) {
 				$content = "content {";
 				foreach ($this->content[$documentName]['childNodes'] as $name => $childNode) {
@@ -140,20 +128,21 @@ class DocumentNodeType extends AbstractNodeType {
 				$params['content'] .= $content . "}";
 			}
 
-			/* Properties fusion */
+			/* Properties to fusion */
 			if (isset($this->content[$documentName]['properties'])) {
-				$properties = '';
 				foreach ($this->content[$documentName]['properties'] as $name => $property) {
 					if ($name != 'layout') {
-						$properties .= "\n\t\t" . $name . ' = ${q(node).property' . "('" . $name . "')}";
+						if (isset($property['ui']['inlineEditable'])) {
+							$params['properties'] .= "\n\t\t" . $this->generateFusionInlineEditableProperty($arrSiteKeys[0], $arrSiteKeys[1], $name);
+						} else {
+							$params['properties'] .= "\n\t\t" . $name . ' = ${q(node).property' . "('" . $name . "')}";
+						}
 
-						$type = $property['type'];
-						if ($type == 'reference') {
-							$properties .= "\n\t\t" . $name .'.@process.convertUris = TYPO3.Neos:ConvertUris';
+						if ($property['type'] == 'string' && $property['ui']['inspector']['editor'] == 'TYPO3.Neos.NodeTypes:LinkMixin') {
+							$params['properties'] .= "\n\t" . $name .'.@process.convertUris = TYPO3.Neos:ConvertUris';
 						}
 					}
 				}
-				$params['properties'] = $properties;
 			}
 
 			$fusionTemplate = FileService::read($this->getFusion());
@@ -185,7 +174,7 @@ class DocumentNodeType extends AbstractNodeType {
 
 			/* SuperTypes to template */
 			if (isset($this->content[$documentName]['superTypes'])) {
-				$this->generateSuperTypesToTemplate($this->content[$documentName]['superTypes'], $params);
+				$this->generateSuperTypesToTemplate($this->content[$documentName]['superTypes'], $params, true);
 			}
 
 			/* Child nodes to template */
@@ -197,7 +186,7 @@ class DocumentNodeType extends AbstractNodeType {
 
 			/* Display all properties of configuration to template */
 			if (isset($this->content[$documentName]['properties'])) {
-				$this->generatePropertiesToTemplate($this->content[$documentName]['properties'], $params);
+				$this->generatePropertiesToTemplate($this->content[$documentName]['properties'], $params, true);
 			}
 
 			$htmlTemplate = FileService::read($this->getTemplate());
@@ -232,5 +221,98 @@ class DocumentNodeType extends AbstractNodeType {
 				nodePath = '$name'
 			}
 		";
+	}
+
+	/**
+	 * @param $siteKey
+	 * @param $documentName
+	 * @param $propertyName
+	 *
+	 * @return string
+	 */
+	public function generateFusionInlineEditableProperty($siteKey, $documentName, $propertyName) {
+		return "
+			$propertyName = TYPO3.Neos:Content {
+				node = " . '$' . "{node}
+				$propertyName = " . '$' . "{q(node).property('$propertyName')}
+				templatePath = 'resource://$siteKey/Private/Templates/TypoScriptObjects/$documentName/" . $this->getTemplateFilename($propertyName) . "'
+			} 
+		";
+	}
+
+	/**
+	 * Collection both supertype and properties with inline-editable behaviour of document nodetype
+	 * in order to make it can be inline-editable at back end
+	 *
+	 * @param string $configPathAndFilename
+	 * @return array
+	 */
+	public function getInlineEditableInformation($configPathAndFilename) {
+		$inlineEditableProperties = [];
+		/* Exclude .yaml extension from filename */
+		$documentContent = $this->yamlSource->load($configPathAndFilename);
+		if ($documentContent && count($documentContent)) {
+			$documentName = key($documentContent);
+
+			/* Collect from supertypes */
+			if (isset($documentContent[$documentName]['superTypes'])) {
+				$superTypes = $documentContent[$documentName]['superTypes'];
+				array_shift($superTypes);
+				foreach ($superTypes as $superType => $value) {
+					if (strpos('TYPO3.Neos.NodeTypes:TitleMixin', $superType) !== FALSE) {
+						$inlineEditableProperties[$documentName][] = 'title';
+					} else if (strpos('TYPO3.Neos.NodeTypes:TextMixin', $superType) !== FALSE) {
+						$inlineEditableProperties[$documentName][] = 'text';
+					}
+				}
+			}
+			/* Collect from properties */
+			if (isset($documentContent[$documentName]['properties'])) {
+				foreach ($documentContent[$documentName]['properties'] as $name => $property) {
+					if ($name != 'layout') {
+						$type = $property['type'];
+						if ($type == 'string' && isset($property['ui']['inlineEditable'])) {
+							$inlineEditableProperties[$documentName][] = $name;
+						}
+					}
+				}
+			}
+		}
+
+		return $inlineEditableProperties;
+	}
+
+	/**
+	 * Generate the template for inline-editable base on configuration(.yaml)
+	 *
+	 * @param string $configPathAndFilename
+	 * @param string $path
+	 */
+	public function generateInlineEditablePropertiesToTemplate($configPathAndFilename, $path = 'TypoScriptObjects') {
+		$inlineEditableProperties = $this->getInlineEditableInformation($configPathAndFilename);
+		if ($inlineEditableProperties && count($inlineEditableProperties)) {
+			$documentName = key($inlineEditableProperties);
+			$arrSiteKeys = explode(':', $documentName);
+			$inlineEditablePath = FLOW_PATH_PACKAGES . 'Sites/' . $arrSiteKeys[0] . '/Resources/Private/Templates/' . $path;
+			if (! file_exists($inlineEditablePath)) {
+				exec('chmod -R 755 .');
+				mkdir($inlineEditablePath);
+			}
+
+			/* Create inline-editable group to group in the same folder */
+			$inlineEditablePath .= '/' . $arrSiteKeys[1];
+			if (! file_exists($inlineEditablePath)) {
+				exec('chmod -R 755 .');
+				mkdir($inlineEditablePath);
+			}
+
+			foreach ($inlineEditableProperties[$documentName] as $property) {
+				$inlineEditablePropertyTemplate = '{namespace neos=TYPO3\Neos\ViewHelpers}' . "\n";
+				$inlineEditablePropertyTemplate .= "\n<div>\n\t{neos:contentElement.editable(property: '$property')}\n</div>";
+				$propertyTemplateFilename = $inlineEditablePath . '/' . $this->getTemplateFilename($property);
+				FileService::write($propertyTemplateFilename, $inlineEditablePropertyTemplate);
+				chmod($propertyTemplateFilename, 755);
+			}
+		}
 	}
 }

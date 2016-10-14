@@ -31,19 +31,6 @@ class ContentNodeType extends AbstractNodeType {
 	}
 
 	/**
-	 * @param $name
-	 *
-	 * @return string
-	 */
-	public function getFusionFilename($name) {
-		return ucfirst($name) . self::NODETYPE_FUSION_EXTENSION;
-	}
-
-	public function getTemplateFilename($name) {
-		return ucfirst($name) . self::NODETYPE_TEMPLATE_EXTENSION;
-	}
-
-	/**
 	 * @param array $data
 	 */
 	public function generateConfig($data) {
@@ -74,7 +61,7 @@ class ContentNodeType extends AbstractNodeType {
 
 		/* Generate help message */
 		if (isset($data['info']['helperMessage']) && $data['info']['helperMessage'] != '') {
-			$content[$configContent['name']]['ui']['helper'] = $this->templateService->generateHelpMessageTemplate($data['info']['helperMessage']);
+			$content[$configContent['name']]['ui']['help'] = $this->templateService->generateHelpMessageTemplate($data['info']['helperMessage']);
 		}
 
 		/* Generate properties */
@@ -126,22 +113,18 @@ class ContentNodeType extends AbstractNodeType {
 
 			/* Child nodes fusion */
 			if (isset($this->content[$contentName]['childNodes'])) {
-				$content = "";
 				foreach ($this->content[$contentName]['childNodes'] as $childNode) {
-					$content .= trim($this->getFusionContentTemplate($childNode));
+					$params['childNodes'] .= trim($this->getFusionContentTemplate($childNode));
 				}
-				$params['childNodes'] = $content;
 			}
 
 			/* Properties fusion */
 			if (isset($this->content[$contentName]['properties'])) {
-				$properties = '';
 				foreach ($this->content[$contentName]['properties'] as $name => $property) {
-					if ($name != 'layout' && $property['type'] == 'reference') {
-						$properties .= "\n\t" . $name .'.@process.convertUris = TYPO3.Neos:ConvertUris';
+					if ($property['type'] == 'string' && isset($property['ui']['inspector']['editor']) && $property['ui']['inspector']['editor'] == 'TYPO3.Neos/Inspector/Editors/LinkEditor') {
+						$params['properties'] .= "\n\t" . $name .'.@process.convertUris = TYPO3.Neos:ConvertUris';
 					}
 				}
-				$params['properties'] .= $properties;
 			}
 
 			$fusionTemplate = FileService::read($this->getFusion());

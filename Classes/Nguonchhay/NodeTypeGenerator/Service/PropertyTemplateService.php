@@ -137,6 +137,7 @@ class PropertyTemplateService {
 				'reloadIfChanged' => true,
 				'inspector' => [
 					'group' => $data['group'],
+					'position' => 50,
 					'editorOptions' => [
 						'maxlength' => 255
 					]
@@ -162,6 +163,7 @@ class PropertyTemplateService {
 				'reloadIfChanged' => true,
 				'inspector' => [
 					'group' => $data['group'],
+					'position' => 50,
 					'editor' => 'TYPO3.Neos/Inspector/Editors/TextAreaEditor',
 					'editorOptions' => [
 						'rows' => intval($data['rows'])
@@ -188,6 +190,7 @@ class PropertyTemplateService {
 				'label' => $data['label'],
 				'inspector' => [
 					'group' => $data['group'],
+					'position' => 50,
 					'editor' => 'TYPO3.Neos/Inspector/Editors/SelectBoxEditor',
 					'editorOptions' => [
 						'allowEmpty' => true,
@@ -211,6 +214,33 @@ class PropertyTemplateService {
 		$this->assignValidatorProperty($selectProperty, $data['validators']);
 
 		return $selectProperty;
+	}
+
+	/**
+	 * This function is used to generate property whose type is in [boolean, integer, image, asset, asset list, reference(s)]
+	 *
+	 * @param string $type
+	 * @param array $data
+	 *
+	 * @return array
+	 */
+	private function generateLinkProperty($data) {
+		$name = lcfirst(trim($data['name']));
+		$textAreaProperty[$name] = [
+			'type' => 'string',
+			'ui' => [
+				'label' => $data['label'],
+				'reloadIfChanged' => true,
+				'inspector' => [
+					'group' => $data['group'],
+					'position' => 50,
+					'editor' => 'TYPO3.Neos/Inspector/Editors/LinkEditor'
+				]
+			]
+		];
+		$this->assignValidatorProperty($textAreaProperty, $data['validators']);
+
+		return $textAreaProperty;
 	}
 
 	/**
@@ -257,6 +287,15 @@ class PropertyTemplateService {
 				'validators' => $data['validators']
 			];
 			$property = $this->generateSelectProperty($adjustData);
+		} else if ($data['type']['editorType'] == 'TYPO3.Neos/Inspector/Editors/LinkEditor') {
+			$adjustData = [
+				'name' => $data['name'],
+				'label' => $data['label'],
+				'defaultValue' => $data['defaultValue'],
+				'group' => isset($data['documentGroup']) ? trim($data['documentGroup']) : 'document',
+				'validators' => $data['validators']
+			];
+			$property = $this->generateLinkProperty($adjustData);
 		}
 
 		return $property;

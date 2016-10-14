@@ -125,6 +125,11 @@ class NodeGeneratorController extends AbstractController {
 				$extension = pathinfo($filename, PATHINFO_EXTENSION);
 				if ($extension == 'yaml') {
 					copy(self::TEMP_PATH . '/' . $filename, $baseDestination . '/Configuration/' . $filename);
+
+					/* Enable inline-editable of document nodetype */
+					if ($arguments['isDocument']) {
+						$this->documentNodeType->generateInlineEditablePropertiesToTemplate($baseDestination . '/Configuration/' . basename($filename, '.yaml'));
+					}
 				} else if($extension == 'ts2') {
 					$fusion = '';
 					if ($arguments['isDocument']) {
