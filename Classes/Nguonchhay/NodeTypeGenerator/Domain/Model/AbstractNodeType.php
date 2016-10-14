@@ -242,9 +242,10 @@ abstract class AbstractNodeType {
 				if ($type == 'integer') {
 					$params['properties'] .= "\n\t<div>{" . $name . "}</div>";
 				} else if ($type == 'string') {
+					\TYPO3\Flow\var_dump($property);
 					if (isset($property['ui']['inlineEditable']) && ! $isDocument) {
 						$params['properties'] .= "\n\t\t\t<div{attributes -> f:format.raw()}>\n\t\t\t\t{neos:contentElement.editable(property: '$name')}\n\t\t\t</div>";
-					} else if ($property['ui']['inspector']['editor'] == 'TYPO3.Neos/Inspector/Editors/LinkEditor') {
+					} else if (isset($property['ui']['inspector']['editor']) && $property['ui']['inspector']['editor'] == 'TYPO3.Neos/Inspector/Editors/LinkEditor') {
 						$params['properties'] .= "\n\t\t\t" . '<a href="{' . $name . '-> f:format.raw()}">{' . $name . " -> f:format.raw()}</a>";
 					} else {
 						$params['properties'] .= "\n\t\t\t{" . $name . " -> f:format.raw()}";
@@ -254,9 +255,9 @@ abstract class AbstractNodeType {
 				} else if ($type == 'TYPO3\Media\Domain\Model\ImageInterface') {
 					$params['properties'] .= "\n\t\t\t" . '<f:if condition="{' . $name . '}">' . "\t\t\t\t" . '<media:image asset="{' . $name . '}" alt="{alternativeText}" title="{title}" width="{width}" maximumWidth="{maximumWidth}" height="{height}" maximumHeight="{maximumHeight}" allowUpScaling="{allowUpScaling}" allowCropping="{allowCropping}" />' . "\t\t\t" . '</f:if>';
 				} else if ($type == 'reference' || $type == 'references') {
-					$params['properties'] .= "\n\t\t\t<!-- Add loop for $name reference(s) -->";
+					$params['properties'] .= "\n\t\t\t<!-- Add template for $name reference(s) -->";
 				} else if ($type == 'TYPO3\Media\Domain\Model\Asset' || $type == 'array<TYPO3\Media\Domain\Model\Asset>') {
-					$params['properties'] .= "\n\t\t\t<!-- Add loop for asset $name -->";
+					$params['properties'] .= "\n\t\t\t<!-- Add template for $name asset(s)-->";
 				}
 			}
 		}

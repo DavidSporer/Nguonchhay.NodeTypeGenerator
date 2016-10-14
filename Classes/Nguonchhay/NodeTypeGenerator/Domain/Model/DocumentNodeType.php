@@ -138,7 +138,7 @@ class DocumentNodeType extends AbstractNodeType {
 							$params['properties'] .= "\n\t\t" . $name . ' = ${q(node).property' . "('" . $name . "')}";
 						}
 
-						if ($property['type'] == 'string' && $property['ui']['inspector']['editor'] == 'TYPO3.Neos.NodeTypes:LinkMixin') {
+						if ($property['type'] == 'string' && isset($property['ui']['inspector']['editor']) && $property['ui']['inspector']['editor'] == 'TYPO3.Neos.NodeTypes:LinkMixin') {
 							$params['properties'] .= "\n\t" . $name .'.@process.convertUris = TYPO3.Neos:ConvertUris';
 						}
 					}

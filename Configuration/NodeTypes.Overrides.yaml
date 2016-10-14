@@ -1,0 +1,14 @@
+# Add group to link mixin
+'TYPO3.Neos.NodeTypes:LinkMixin':
+  ui:
+    inspector:
+      groups:
+        link:
+          label: 'Link properties'
+          position: 500
+          icon: 'icon-link'
+  properties:
+    link:
+      ui:
+        inspector:
+          group: link

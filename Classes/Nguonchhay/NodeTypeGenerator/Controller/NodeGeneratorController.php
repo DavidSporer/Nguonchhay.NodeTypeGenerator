@@ -150,6 +150,7 @@ class NodeGeneratorController extends AbstractController {
 				}
 			}
 		}
+
 		$this->view->assign('isDocument', $arguments['isDocument']);
 	}
 
