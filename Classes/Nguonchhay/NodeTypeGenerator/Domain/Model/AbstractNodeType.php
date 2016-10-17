@@ -209,23 +209,23 @@ abstract class AbstractNodeType {
 		foreach ($superTypes as $superType => $value) {
 			if (strpos('TYPO3.Neos.NodeTypes:TitleMixin', $superType) !== FALSE) {
 				if ($isDocument) {
-					$params['superTypes'] .= "{title -> f:format.raw()}\n\t\t\t";
+					$params['superTypes'] .= "\n\t\t\t<neos:contentElement.wrap>\n\t\t\t\t<div>\n\t\t\t\t\t{neos:contentElement.editable(property: 'title')}\n\t\t\t\t</div>\n\t\t\t</neos:contentElement.wrap>";
 				} else {
-					$params['superTypes'] .= "<div{attributes -> f:format.raw()}>\n\t\t\t\t{neos:contentElement.editable(property: 'title')}\n\t\t\t</div>\n\t\t\t";
+					$params['superTypes'] .= "\n\t<div{attributes -> f:format.raw()}>\n\t\t{neos:contentElement.editable(property: 'title')}\n\t</div>";
 				}
 			} else if (strpos('TYPO3.Neos.NodeTypes:TextMixin', $superType) !== FALSE) {
 				if ($isDocument) {
-					$params['superTypes'] .= "{text -> f:format.raw()}\n\t\t\t";
+					$params['superTypes'] .= "\n\t\t\t<neos:contentElement.wrap>\n\t\t\t\t<div>\n\t\t\t\t\t{neos:contentElement.editable(property: 'text')}\n\t\t\t\t</div>\n\t\t\t</neos:contentElement.wrap>";
 				} else {
-					$params['superTypes'] .= "<div{attributes -> f:format.raw()}>\n\t\t\t\t{neos:contentElement.editable(property: 'text')}\n\t\t\t</div>\n\t\t\t";
+					$params['superTypes'] .= "\n\t<div{attributes -> f:format.raw()}>\n\t\t{neos:contentElement.editable(property: 'text')}\n\t</div>";
 				}
 			} else if (strpos('TYPO3.Neos.NodeTypes:ImageMixin', $superType) !== FALSE) {
-				$params['superTypes'] .= '<f:if condition="{image}">' . "\n\t\t\t\t" . '<media:image asset="{image}" alt="{alternativeText}" title="{title}" width="{width}" maximumWidth="{maximumWidth}" height="{height}" maximumHeight="{maximumHeight}" allowUpScaling="{allowUpScaling}" allowCropping="{allowCropping}" />' . "\n\t\t\t" . "</f:if>\n\t\t\t";
+				$params['superTypes'] .= "\n\t" . '<f:if condition="{image}">' . "\n\t\t\t\t" . '<media:image asset="{image}" alt="{alternativeText}" title="{title}" width="{width}" maximumWidth="{maximumWidth}" height="{height}" maximumHeight="{maximumHeight}" allowUpScaling="{allowUpScaling}" allowCropping="{allowCropping}" />' . "\n\t\t\t</f:if>";
 				$params['imageNameSpace'] .= '{namespace media=TYPO3\Media\ViewHelpers}';
 			} else if (strpos('TYPO3.Neos.NodeTypes:LinkMixin', $superType) !== FALSE) {
-				$params['properties'] .= "<a href=\"{link -> f:format.raw()}\">{link -> f:format.raw()}</a>\n\t\t\t";
+				$params['properties'] .= "\n\t<a href=\"{link -> f:format.raw()}\">{link -> f:format.raw()}</a>";
 			} else if (strpos('TYPO3.Neos.NodeTypes:ContentReferences', $superType) !== FALSE || strpos('TYPO3.Neos.NodeTypes:AssetList', $superType) !== FALSE) {
-				$params['superTypes'] .= "<!--Add your fusion here-->\n\t\t\t";
+				$params['superTypes'] .= "\n\t<!--Add your fusion here-->";
 			}
 		}
 	}
@@ -242,9 +242,12 @@ abstract class AbstractNodeType {
 				if ($type == 'integer') {
 					$params['properties'] .= "\n\t<div>{" . $name . "}</div>";
 				} else if ($type == 'string') {
-					\TYPO3\Flow\var_dump($property);
-					if (isset($property['ui']['inlineEditable']) && ! $isDocument) {
-						$params['properties'] .= "\n\t\t\t<div{attributes -> f:format.raw()}>\n\t\t\t\t{neos:contentElement.editable(property: '$name')}\n\t\t\t</div>";
+					if (isset($property['ui']['inlineEditable'])) {
+						if ($isDocument) {
+							$params['properties'] .= "\n\t\t\t<neos:contentElement.wrap>\n\t\t\t\t<div>\n\t\t\t\t\t{neos:contentElement.editable(property: '$name')}\n\t\t\t\t</div>\n\t\t\t</neos:contentElement.wrap>";
+						} else {
+							$params['properties'] .= "\n\t<div{attributes -> f:format.raw()}>\n\t\t{neos:contentElement.editable(property: '$name')}\n\t</div>";
+						}
 					} else if (isset($property['ui']['inspector']['editor']) && $property['ui']['inspector']['editor'] == 'TYPO3.Neos/Inspector/Editors/LinkEditor') {
 						$params['properties'] .= "\n\t\t\t" . '<a href="{' . $name . '-> f:format.raw()}">{' . $name . " -> f:format.raw()}</a>";
 					} else {
