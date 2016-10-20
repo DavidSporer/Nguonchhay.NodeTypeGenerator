@@ -44,10 +44,16 @@ class PropertyTemplateService {
 		$name = key($property);
 		foreach ($validators as $validator) {
 			$validator = trim($validator);
-			$property[$name]['validation'][$validator] = [];
-
-			if ($validator == 'TYPO3.Neos/Validation/NotEmptyValidator') {
-				unset($property[$name]['ui']['inspector']['editorOptions']['allowEmpty']);
+			if ($validator == 'TYPO3.Neos/Validation/NumberRangeValidator') {
+				$property[$name]['validation'][$validator] = [
+					'minimum' => 0,
+					'maximum' => 1000000
+				];
+			} else {
+				$property[$name]['validation'][$validator] = [];
+				if ($validator == 'TYPO3.Neos/Validation/NotEmptyValidator') {
+					unset($property[$name]['ui']['inspector']['editorOptions']['allowEmpty']);
+				}
 			}
 		}
 	}
