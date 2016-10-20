@@ -113,8 +113,8 @@ class ContentNodeType extends AbstractNodeType {
 
 			/* Child nodes fusion */
 			if (isset($this->content[$contentName]['childNodes'])) {
-				foreach ($this->content[$contentName]['childNodes'] as $childNode) {
-					$params['childNodes'] .= trim($this->getFusionContentTemplate($childNode));
+				foreach ($this->content[$contentName]['childNodes'] as $name => $childNode) {
+					$params['childNodes'] .= trim($this->getFusionContentTemplate($name));
 				}
 			}
 
@@ -150,7 +150,8 @@ class ContentNodeType extends AbstractNodeType {
 			$params = [
 				'imageNameSpace' => '',
 				'properties' => '',
-				'superTypes' => ''
+				'superTypes' => '',
+				'childNodes' => ''
 			];
 
 			/* SuperTypes to template */
@@ -160,11 +161,9 @@ class ContentNodeType extends AbstractNodeType {
 
 			/* Assign child nodes to template */
 			if (isset($this->content[$contentName]['childNodes'])) {
-				$content = "";
 				foreach ($this->content[$contentName]['childNodes'] as $name => $childNode) {
-					$content .= "\n\t{" . lcfirst($name) . " -> f:format.raw()}";
+					$params['childNodes'] .= "\n\t{" . lcfirst($name) . " -> f:format.raw()}";
 				}
-				$params['childNodes'] .= $content;
 			}
 
 			/* Display all properties of configuration to template */
@@ -199,7 +198,7 @@ class ContentNodeType extends AbstractNodeType {
 	 * @return string
 	 */
 	public function getFusionContentTemplate($childNode) {
-		$name = lcfirst(key($childNode));
+		$name = lcfirst($childNode);
 		return "
 			$name = ContentCollection {
 				nodePath = '$name'
