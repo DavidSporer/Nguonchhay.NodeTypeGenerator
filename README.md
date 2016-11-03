@@ -23,7 +23,7 @@ Then download the package: `composer update nguonchhay/nodetypegenerator`
 ./flow flow:cache:flush --force
 ```
 
-### Add these configuration to global route at `Configuration/Routes.yaml` before the TYPO3.Neos subroutes
+### Add these configuration to global route at `Configuration/Development/Routes.yaml`
 
 ```
 ##
