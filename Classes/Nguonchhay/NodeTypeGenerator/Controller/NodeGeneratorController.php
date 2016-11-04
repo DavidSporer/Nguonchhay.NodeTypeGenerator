@@ -9,8 +9,9 @@ use Nguonchhay\NodeTypeGenerator\Domain\Model\ContentNodeType;
 use Nguonchhay\NodeTypeGenerator\Domain\Model\DocumentNodeType;
 use Nguonchhay\NodeTypeGenerator\Service\FileService;
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Mvc\Controller\ActionController;
 
-class NodeGeneratorController extends AbstractController {
+class NodeGeneratorController extends ActionController {
 
 	const TEMP_PATH = FLOW_PATH_PACKAGES . 'Application/Nguonchhay.NodeTypeGenerator/Resources/Private/StaticTemplates/Temporary';
 
@@ -26,6 +27,9 @@ class NodeGeneratorController extends AbstractController {
 	 */
 	protected $contentNodeType;
 
+	public function indexAction() {
+		$this->redirect('generateForm');
+	}
 
 	/**
 	 * @return void

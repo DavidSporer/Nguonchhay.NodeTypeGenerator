@@ -1,19 +1,19 @@
 TYPO3:
-  Flow:
-    security:
-      authentication:
-        providers:
-          'Typo3BackendProvider':
-            requestPatterns:
-              controllerObjectName:
-                'TYPO3\Neos\Controller\.*|TYPO3\Neos\Service\.*|TYPO3\Media\Controller\.*|WebExcess\Notifications\Controller\NotificationController|Nguonchhay\NodeTypeGenerator\Controller\.*'
   Neos:
     nodeTypes:
       groups:
         structureitem:
           position: 200
           label: 'Structure Item'
-
+    modules:
+      administration:
+        submodules:
+          nodeTypeGenerator:
+            label: 'Custom Node Types'
+            controller: 'Nguonchhay\NodeTypeGenerator\Controller\NodeGeneratorController'
+            description: 'Create custom node types'
+            icon: 'icon-code'
+            privilegeTarget: 'Nguonchhay.NodeTypeGenerator:NodeGeneratorControllerActions'
 
 Nguonchhay:
   NodeTypeGenerator:
